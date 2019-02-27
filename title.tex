@@ -1,0 +1,50 @@
+\begin{titlepage}
+    \begin{center}
+        % Upper part of the page. The '~' is needed because \\
+        % only works if a paragraph has started.
+        \begin{center}
+            \includegraphics[width=0.15\textwidth]{./figures/uon_logo.png}
+            
+            \textsc{\LARGE University of Newcastle}\\[1cm]
+        \end{center}
+        
+        % Title
+        % Author and supervisor
+        \begin{textblock*}{133mm}(49mm,75mm)  %% change width of box from 10in as you wish
+            \begin{minipage}[t][65mm][t]{133mm}
+                \centering
+                ~\\[0.5cm]
+                \textsc{\Large Final Report}\\[0.5cm]
+            
+                \hrule ~\\[0.5cm]
+                { \Large Pneumatic Muscle Joint Research and Design\\[0.5cm] }
+                \hrule ~\\[0.5cm]
+            
+                \noindent
+                \begin{minipage}{0.4\textwidth}
+                    \begin{flushleft} \large
+                        \emph{Author:}\\
+                        Taylor \textsc{Young}\\
+                        Student Number: 3206230
+                    \end{flushleft}
+                \end{minipage}%
+                \begin{minipage}{0.4\textwidth}
+                    \begin{flushright} \large
+                        \emph{Supervisors:} \\
+                        Colin \textsc{Coates}\\
+                    \end{flushright}
+                \end{minipage}\\[0.5cm]
+                \hrule ~\\[0.3cm]
+                {\large \today}
+            \end{minipage}
+        \end{textblock*}
+    \end{center}
+    
+    \vfill
+    
+    \emph{A thesis submitted in partial fulfilment of the requirements for the degree of Bachelorof Engineering in Electrical (Computer or Telecommunications) Engineering at TheUniversity of Newcastle, Australia.}
+    
+    \vfill
+\end{titlepage}
+
+% pdflatex -synctex=1 -shell-escape Final_Report.tex

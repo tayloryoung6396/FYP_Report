@@ -1,0 +1,118 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage[overlay,absolute]{textpos}
+\usepackage[multiple]{footmisc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[top=35mm, bottom=35mm, left=35mm, right=30mm]{geometry}
+\usepackage[style=ieee,autocite=inline,bibencoding=ascii,backend=bibtex]{biblatex}
+\usepackage{xstring}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{pdflscape}
+\usepackage[number]{abstract}
+\usepackage{afterpage}
+\usepackage{listings}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{amsmath}
+
+%\singlespacing
+\onehalfspacing
+%\doublespacing
+
+\fancyhf{} % clear all header and footers
+\rfoot{\thepage}
+\pagestyle{fancy}
+
+% For inserting a blank page.
+\newcommand{\blankpage}{
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+\addtocounter{page}{-1}
+}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1\textwidth}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1\textwidth}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1\textwidth}}
+\newcolumntype{P}[1]{>{\raggedright\right\newline\\\arraybackslash\hspace{0pt}}p{#1\textwidth}}
+
+%% To prevent overfull hbox in bibliography.
+\emergencystretch=1em
+
+%%% Include bibtex references.
+\addbibresource{references.bib}
+
+\title{Final Report}
+\author{Alex Biddulph\\Student Number: 3124185}
+
+\begin{document}
+%Title
+\def\isfinalreport{1}
+\input{./title.tex}
+\blankpage
+\pagenumbering{gobble}
+
+%%% Use roman numerals for page numbering in document preamble (abstract, TOC, acknowledgements, etc).
+\pagenumbering{roman}
+
+%Abstract
+\input{./abstract.tex}
+\blankpage
+
+%Acknowledgements
+\input{./acknowledgements.tex}
+\blankpage
+
+%Contributions
+\input{./contributions.tex}
+\blankpage
+
+%Contents
+\tableofcontents
+\newpage
+
+%%% Use arabic numbers for page numbering in report body.
+\pagenumbering{arabic}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\newpage
+
+\section{Related Work}
+\label{sec:related_work}
+
+\newpage
+
+\section{System Implementation}
+\label{sec:system_implementation}
+
+\newpage
+
+\section{Testing and Evaluation}
+\label{sec:results}
+
+\newpage
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\newpage
+
+\section{Further Work}
+\label{sec:further}
+
+\newpage
+
+
+%%% Display the bibliography.
+\printbibliography
+
+\end{document}
