@@ -20,6 +20,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{amsmath}
+\usepackage{pgfgantt}
 
 %\singlespacing
 \onehalfspacing
@@ -84,33 +85,182 @@
 \section{Introduction}
 \label{sec:introduction}
 
-\newpage
 
+
+\subsection{Motivation}
+\label{sub:motivation}
+
+A non-mathematical (and as far as possible, non-technical) introduction to the subject of your
+thesis. Should start at general electrical (or computer) engineering, and end with what and
+why your project is. For example, for project on advanced disco lighting (isn't that
+everybody's favourite topic?): \newline
+- what is disco lighting? \newline
+- why it is needed? \newline
+- how it is used? \newline
+- what special features separate disco lighting from other lighting? \newline
+- current state of disco lighting. \newline
+- what is wrong with current state? \newline
+- general scope for improvement in disco lighting. \newline
+- what net gains are to be made?
+
+\begin{itemize}
+\item Humanoid robotics is a fast developing field encompassing a vast range of disciplines Actuators are;
+\item limited by speed
+\item energy consumption/efficiency and Power to Weight ratio
+\item torque
+\item Currently used actuators from the humanoid league are dynamixels or custom motors. These are expensive and have limited speed. Leaders in the field use hydraulics (boston). Larger payloads
+\end{itemize}
+
+Humanoid robotics is a fast developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general intelligence. Robocup is just one example of a competition utilising a simple soccer game as the platform for the research and development of humanoid robots. Robocup involves teams of robots attempting to play a game of soccer. Whilst this may seem trivial, in order to play soccer you need the ability to perform three major tasks. Vision is used to locate object in the world, balls, goals, field lines
+
+\subsection{Overview}
+\label{sub:overview}
+\begin{itemize}
+\item Design and construction of a physical limb
+\item Modelling of the system
+\item Design of the Controller
+\end{itemize}
+
+\newpage
+\subsection{Outline}
+\label{sub:outline}
+\begin{enumerate}
+\item \textbf{Introduction} (this chapter) A paragraph for each chapter (sentence for each section) outlining what is to follow in the 
+remainder of the report. Include descriptions of Appendices.
+\item \textbf{Related Work} A paragraph for each chapter (sentence for each section) outlining what is to follow in the
+remainder of the report. Include descriptions of Appendices.
+\item \textbf{System Implementation} A paragraph for each chapter (sentence for each section) outlining what is to follow in the
+remainder of the report. Include descriptions of Appendices.
+\item \textbf{Testing and Evaluation} A paragraph for each chapter (sentence for each section) outlining what is to follow in the
+remainder of the report. Include descriptions of Appendices.
+\item \textbf{Conclusion} A paragraph for each chapter (sentence for each section) outlining what is to follow in the
+remainder of the report. Include descriptions of Appendices.
+\item \textbf{Further Work} A paragraph for each chapter (sentence for each section) outlining what is to follow in the
+remainder of the report. Include descriptions of Appendices.
+\end{enumerate}
+
+\newpage
 \section{Related Work}
 \label{sec:related_work}
 
-\newpage
+% A chapter dedicated to setting out the underlying technical background material you'll need in
+% discussing your project in subsequent chapters. This includes basic physics, electronics,
+% control theory, and so on. Material will invariably be taken from an assortment of text books,
+% with appropriate referencing. It is probably impossible to write this chapter without using
+% other peoples work! \newline
+% This chapter, together with all other chapters except the first and last, can often be made more
+% readable by having a (brief) first section as a chapter introduction describing what the chapter
+% contains and how it relates to either the body of work as a whole, and/or the previous chapter.
+% A final section in each chapter summarising the key points of the current chapter, and linking
+% to the following chapter is also useful (in motivating the reader to keep on reading! \newline
+TODO Summary
 
+
+\subsection{Pneumatic Muscles}
+\label{sub:pneumatic_muscles}
+Pneumatic air muscles have many names fluidic muscle, pneumatic muscle actuator, air muscle, axially contractible actuator, tension actuator, fluid actuator and fluid driven tension actuator \ref{J} \ref{L}. These are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. PAM were first developed under the name McKibben Artificial Muscle in the 1950s for use in prosthetic limbs, they were then commercialised by the Bridgestone rubber company in the 1980s under the name Rubbertuators. Since then two major companies have developed PAMs for commercial purposes, Festo and the Shadow Robot Company. The construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours, these often measure pressure, axial contraction and exhorted force of the actuator \ref{I}. \newline
+Pneumatic muscles are the biological motor for locomotion or manipulation with advantages like the passive damping, good power to weight ratio, low maintenance, low price and usage in rough environments \ref{B}. They are ideal for use in human environments in applications of human interaction such as rehabilitation therapy, nursing elderly people, and day to day work support for elderly people \ref{M}. Compared to traditional actuators in the form of electric servos, pneumatic muscles are highly nonlinear requiring complex controllers to perform precise movements. \newline
+INSERT PICTURE OF MUSCLES
+\newline
+
+Previous studies have looked at alternate sensing methods ustilising self contained displacement and force sensors removing the requirement for external sensing elements that allow the detection of axial contraction force and displacement at the same time. Traditionally linear encoders and load cells have been used to fulfill this task increasing the devices form factor and reducing compliance. Existing solutions include dielectric elastomers, embedded microfluidic elastomers, conductive fibre mesh and inductive coils all of which use changing resistance or inductance to measure the displacement. These mechanisms often require special manufacturing processes that limit the selection of the elastomer \ref{I}. 
+Additionally research has focused on the compatibility between the braided mesh and the inner bladder. The suitability of the mesh is significant, using the optimum size braided mesh can lead to maximum contraction. Typically PMA technology provides a maximum contraction of 25-30\% stroke compared to the 50-70\% stroke of the biological muscle \ref{H}. However, when the component dimensions are optimised contraction up to 51.85\% can be achieved \ref{J}. Incompatibility of the braided mesh with the bladder forms stress regions where the bladder non-uniformly expands. When this happens, the energy is lost, and the contraction percentage is reduced. \newline
+
+The force generated by the pneumatic muscle is dependant on the air pressure, nominal length, contraction ratio and material properties. When the air pressure rises, the muscle circumference increases while its length decreases, causing an increase in the muscle contraction. The resulting pulling force, acting in the axial direction, corresponds to the stresses in the flexible mesh. By controlling pressure, it is possible to control the pulling force and the contraction ratio of the pneumatic muscle. \newline
+
+In order to control the flow of air in and out of the actuator an electrically controlled pneumatic proportional or servo valve can be used to adjust the flow of air. Whilst a proportional valve provides the best continuous flow behavior, these are expensive, and to control a single muscle would require one on the input and one on the output. To supplement these valves the use of on/off solenoid 3 way 3 port valves can be used, these often are controlled via a pulse width modulation (PWM) signal to approximate proportional valves. However, this frequent valve switching can lead to shorter valve life, reducing the viability of these valves \ref{G}. In order to reduce excessive valve switching a sliding-mode control (SMC) algorithm with three operating modes can be implemented ensuring the valves switch only when it is necessary for the desired closed-loop performance. This will be discussed in further detail in the control section of this paper \ref{sub:sliding_mode_control}. \newline
+
+Numerous studies have been presented into the feasibility of various robotic platforms based around the use of pneumatic muscles. Humanoid Robotic Leg (HURL) was a conceptual 10 degree of freedom (DOF) lower-limb humanoid platform that was a bio-metrically informed mechanical design that attempted to improve biped robots. This research only implemented the ankle joint concluding that a more complex control structure for torque and compliance control was required, utilising a dynamic model for increased performance \ref{H}. Similarly a quadruped robot driven by Festo air muscles was designed to be a test bed for the implementation and control of pneumatic muscles in legged locomotion. This work suggests the inclusion of a model for the Festo air muscle that incorporates the kinematics of the platform should be implemented in future works \ref{K}. Anthropomorphic robotic hand designs have also been designed with the goal of achieving basic human hand grasps. These use nylon tendon-like cables to transmit the power from a forearm section containing the muscles to the endeffectors making them suitable for delicate object manipulation \ref{L}.
+
+\subsection{Control Methods}
+\label{sub:control_methods}
+As mention in \ref{sub:pneumatic_muscles}, pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Often it is possible to linearise a nonlinear plant around some known operating region in order to implement linear control structures. This could be utilised to control pneumatic muscles if the response curve of the actuator had a useful near linear region to linearise about, however, as seen later in \ref{sub:system_modelling} this is not the case and thus a controller designed to handle nonlinear properties should be used. 
+
+\subsubsection{ANPID}
+\label{sub:pid}
+Advanced nonlinear proportional integral differential (ANPID) controllers are an extension of a linear control structure (PID) that attempts to provide an advanced, flexible and adjustable control performance for custom applications, without requiring knowledge of the setups model. These can be difficult to fine tune the control parameters to achieve efficient control performance and can require an additional layer to schedule gains of the system according to the operating regions and movement type\ref{H}. This scheme lends itself to applications where the system dynamics are unknown and difficult to measure. Generally this isn't a restriction faced when developing a platform from the ground up and thus implementing a control structure that has an increased knowledge of the system dynamics should be used.
+
+\subsubsection{Model Predictive Control}
+\label{sub:model_predictive_control}
+TODO Should this section be included with a lack of research into this topic
+
+\subsubsection{Sliding Mode Control}
+\label{sub:sliding_mode_control}
+As mention previously sliding-mode control (SMC) is an algorithm for controlling the position of a pneumatic cylinder by directly switching four on/off solenoid valves. SMC is used to provide superior performance in terms of valve switches per second (SPS), steady state error (SSE), setting time and overshoot. These valves are much less expensive than the proportional/servo style valves however, have a discontinuous flow behavior making smooth and precise position control more difficult to achieve. While PWM may be used with on/off valves to approximate proportional valves, this frequent switching reduced the lifetime of the valve \ref{G}. \newline
+This algorithm known as SMC or three-mode sliding mode control (SMC3) can be extended to operate with seven regions of control (SMC7), with the goal of reducing the number of valve SPS. The mode producing the larger acceleration should be chosen since it will reduce the tracking error faster. By adding integral action to these existing algorithms a reduced settling time and SSE can be achieved if properly applied. Furthermore by bounding this intergral action anti-windup is achieved reducing overshoot and settling time. These extended controllers are referred to as ISMC3 and ISMC7 and can reduce the SPS by up to 37\% when compared to the original SMC implementation whilst maintaining the position tracking error \ref{G}.
+
+\subsection{System Modelling}
+\label{sub:system_modelling}
+The modelling of a multi-variable system allows current input values to predict future values of the output. This can be combined with real world system measurements to accurately create an error signal proportional to the system error. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships. These models can be extended by considering more complex dynamic characteristics of the system.
+
+\subsubsection{Static Modelling}
+\label{sub:static_modelling}
+Most robotic systems driven by PMAs required an underlying torque controller. This can be achieved with only a static force map leading to an accurate, high-performance controller scheme. Nevertheless, a model describing the static PMA force precisely is crucial for the accuracy of the torque controller \ref{E}. Several fundamental models for PMA have been proposed to this date aimed at describing the static characteristics of PMA, approaches include functions based on energy conservation assuming the ideal cylinder nature of the muscle. These form simplified static models taking into account some simple structural parameters. These lumped parameter models account for the pneumatic circuit pressure and mass flow \ref{C}. Other methods used to determine static characteristics use the isobaric, isotonic and isometric nature of a pressure dependant system. Isotonic characteristics determine the muscle length when the load is constant and there are changes in internal pressure. The isometric condition occurs when controlling the internal pressure to achieve constant contraction with a varying load. Lastly the isobaric characteristics corresponding to an axial contraction with constant pressure and a varying load \ref{F}. These principles can be used to determine formula defining the minimum, maximum and relative static contraction. \newline
+
+By considering both the pneumatic air compression modelling approach and the mechanical spring with varying stiffness approach, one can determine a physically motivated model that is closer to the measure force characteristic of a PMA than any existing model. The idea is the approximation of a PMA as a piston with a virtual, pressure dependent piston area and a spring that counteracts the expansion. This approach has been compared to existing models resulting in the maximum error between the new model and the measured data below 4.4\% \ref{E}. This model can be represented by a 3D static force map as a function of the pressure internal to the system and the length or contraction percentage. 
+\newline INSERT EQUATION
+\newline INSERT STATIC FORCE MAP FROM PAPER
+\begin{center}
+    \includegraphics[scale=0.6]{staticmap.eps}
+    \label{fig:StaticForce}
+    \caption{Force vs. pressure vs. length with inital length 280mm and diameter 20mm}
+\end{center}
+
+\subsubsection{Dynamic Modelling}
+\label{sub:dynamic_modelling}
+Pneumatic air muscles have their own dynamics, like hysteresis, some thermodynamic effects and can even be interpreted as a mass spring damper combination \ref{E}. Models dependent on the construction parameter and air pressure have been developed providing a tensile force formula of the contractor actuator and can be modified to describe the extension force. One model based on a combination of sigmoid functions representing the force output as a function of both the air pressure and initial length, is an estimation derived from three experimental results over varying lengths. This model assumes an average extension ratio of 50\%, the perfect cylindrical shape with zero wall thickness of the inner bladder, constant friction-less contact between the braid and inner tube, constant braid strand length and elasticity of the rubber tube. This model lacks an accurate description of the complex non-cylindrical shape at low pressures and the imperfect contact between the inner tube and braided sleeve \ref{A}. \newline
+
+Extending this the problem can be approached firstly as a mechanically derived nonlinear spring, the stiffness of which can be controller by the muscle pressure. This relationship can be depicted by a fifth order polynomial of two variables of 21 coefficients. The pneumatic part of the model is divided into two main components, the model of volume flow rate through the valves and a differential equation for the muscle pressure. The use of on/off style solenoid valves simplifies the flow rate to either a constant compressor pressure or atmospheric pressure, solely dependent on the muscle pressure. The second pneumatic component is the derivative time dependent equation derived from ideal gas laws. This research found that the hysteresis effects of the muscle actuator cause some steady state error due to simplified descriptions of the mechanical force components. Refinement of the model could decrease the errors to reduce the reliance on the robustness of the control technique \ref{D}.
+
+\newline INSERT DYNAMIC FORCE EQUATION
+
+\newpage
 \section{System Implementation}
 \label{sec:system_implementation}
 
-\newpage
+% You finally get to write about what you have done! \newline
+% Should use and build upon the background material in the previous chapter (or it shouldn't have been there in that chapter in the first place!). \newline
+% Long and tedious proofs, detailed descriptions of circuits or software, and other necessary but
+% unreadable bits, should go in one or more appendices at the end of the thesis. \newline
 
+% Implementation Aspects of .....
+% How did you undertake the theoretical analysis/simulation/construction/software
+% development? \newline 
+% What did you build? \newline
+% What software did you write? \newline
+% |\newline
+The paltform i have developed
+
+\newpage
 \section{Testing and Evaluation}
 \label{sec:results}
 
-\newpage
+% What it showed and/or failed to show. Did it work as expected? Why might it have gone
+% wrong? 
+What i did. Static map, compared to papers map/predicted. How this will be used later.
+\newline
+Step response, how this is shit over large changes, but alright over small ones
 
+\newpage
 \section{Conclusion}
 \label{sec:conclusion}
 
-\newpage
+Conclusions summarises what you set out to do, how you did it, and how it worked or
+didn't work (and don't believe it has to work to make it a worthwhile project - you
+have to work, the project doesn't!). Should be about two pages, and can be "cut and
+pasted" from earlier chapters.
 
+\newpage
 \section{Further Work}
 \label{sec:further}
 
-\newpage
+% Extensions : Look at it this way - if you inherited this project from someone else,
+% you'd like to be given some guidelines as to what to do and what not to do, from here
+% on. What additions, modifications could/should be tried?
+Construction of the platform \newline
+Implementing non linear control scheme \newline
 
+\newpage
 
 %%% Display the bibliography.
 \printbibliography
