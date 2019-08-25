@@ -457,6 +457,84 @@ Finally the following equation gives the positive pulling force exherted by the 
 \end{landscape}
 \newpage
 
+\section{Dynamic Force Derivation}
+\begin{equation}
+    \ddot{y} = \frac{1}{m}[F_E-F_S(k,P_m)-F_D(\dot{k},P_m)]
+\end{equation}
+
+\begin{gather}
+ F_{CE} =
+ \begin{bmatrix}
+    1 \\ 
+    k \\
+    k^2 \\
+    k^3 \\
+    k^4 \\
+    k^5 \\
+   \end{bmatrix}
+ \begin{bmatrix}
+    1 & P_m & P_m^2 & P_m^3 & P_m^4 & P_m^5 \\
+   \end{bmatrix}
+  \begin{bmatrix}
+    a_{00} & a_{01} & a_{02} & a_{03} & a_{04} & a_{05} \\
+    a_{10} & a_{11} & a_{12} & a_{13} & a_{14} & 0 \\
+    a_{20} & a_{21} & a_{22} & a_{23} & 0      & 0 \\
+    a_{30} & a_{31} & a_{32} & 0      & 0      & 0 \\
+    a_{40} & a_{41} & 0      & 0      & 0      & 0 \\
+    a_{50} & 0      & 0      & 0      & 0      & 0 \\
+   \end{bmatrix}
+\end{gather}
+
+\begin{equation}
+    F_D(\dot{k},P_m) = -RP_m\dot{k}
+\end{equation}
+
+\begin{equation}
+   \dot{V_a} = \begin{cases} 
+        P_1C\sqrt{\frac{T_0}{T_1}}\sqrt{1-(\frac{\frac{P_2}{P_1}-b}{1-b})^2}, & \text{if}\ \frac{P_2}{P_1} > b\\ 
+        P_1C\sqrt{\frac{T_0}{T_1}}, & \text{if}\ \frac{P_2}{P_1} $\leq$ b \end{cases}
+\end{equation}
+
+\begin{equation}
+    \frac{d}{dt}(\frac{P_aV_a}{V_m}) = P_a(\frac{\dot{V_a}V_m-\dot{V_m}V_a}{V_m^2}) = P_a\frac{\dot{V_a}}{V_m}-P_m\frac{\dot{V_m}}{V_m}
+\end{equation}
+
+\begin{equation}
+    V_m = ak^3 + bk^2 + ck + d
+\end{equation}
+
+\begin{equation}
+    \dot{V_m} = 3ak^2\dot{k} + 2bk\dot{k} + c\dot{k}
+\end{equation}
+
+Where: \newline
+m - moving mass (kg)\newline
+y - muscle displacement (m)\newline
+$F_s(k, P_m)$ - nonlinear spring force (N)\newline
+$F_d(\dot{k}, P_m)$ - nonlinear damper force (N)\newline
+$F_E$ - external force (N)\newline
+$k = k_0 + \frac{y}{l_0}$ - muscle contraction\newline
+$k_0$ - initial muscle contraction\newline
+$l_0$ - initial muscle length\newline
+$P_m$ - absolute muscle pressure (Pa)\newline
+$a_{xx}$ - 21 coefficient static map matrix\newline
+$R$ - damping coefficient $(m^2s)$\newline
+$\dot{k}$ - muscle velocity (1/s)\newline
+$\dot{V_a}$ - time derivative of muscle air volume (volume flow rate through the valve) $(m^3/s)$
+$P_1$ - absolute upstream pressure (Pa)\newline
+$C = 2.6167x10^{-9}$ - sonic conductance $(m^3/(sPa))$\newline
+$T_0$ - ambient air temperature at reference conditions (K)\newline
+$T_1$ - upstream temperature (K)\newline
+$P_2$ - absolute downstream pressure (Pa)\newline
+b = 0.433 - critical ratio\newline
+$P_a$ - atmospheric pressure (Pa)\newline
+$V_a$ - volume of air in the muscle $(m^3)$\newline
+$V_m$ - muscle volume $(m^3)$\newline
+$\dot{V_m}$ - time derivative of muscle volume $(m^3/s)$\newline
+a, b, c, d - polynomial coefficients
+
+
+\newpage
 \end{appendices}
 % \newpage
 %%% Display the bibliography.
