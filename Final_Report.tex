@@ -25,10 +25,11 @@
 \usepackage{pdflscape}
 \usepackage{cleveref}
 \usepackage{pgf,tikz}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
 \usepackage[australian]{babel}
 \usepackage[titletoc, header, title]{appendix}
-\usetikzlibrary{arrows.meta,calc} %%% Add calc
-
+\usepackage{physics}
 
 %\singlespacing
 \onehalfspacing
@@ -77,13 +78,13 @@
 \input{./abstract.tex}
 \blankpage
 
-% %Acknowledgements
-% \input{./acknowledgements.tex}
-% \blankpage
+%Acknowledgements
+\input{./acknowledgements.tex}
+\blankpage
 
-% %Contributions
-% \input{./contributions.tex}
-% \blankpage
+%Contributions
+\input{./contributions.tex}
+\blankpage
 
 %Contents
 \tableofcontents
@@ -94,27 +95,47 @@
 
 \section{Introduction}
 \label{sec:introduction}
+
 \subsection{Motivation}
 \label{sub:motivation}
 
-Humanoid robotics is a fast-developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general intelligence. Robocup \cite{kitano1995robocup}, is just one example of a competition utilising a simple soccer game as the platform for the research and development of humanoid robots. Robocup involves teams of robots attempting to play a game of soccer on a scaled soccer field. Whilst this may seem trivial, in order to play soccer, you need the ability to perform three major tasks. These three tasks consist of vision, localisation, and locomotion. Vision is used to locate objects in the world, balls, goals, field lines and obstacles. This system is forms the majority of the input into the system, this information is then used to determine the action to take. Localisation is responsible for determining whether the information is correct and consistent with the previous input data, filtering this information into what the robot perceives as the current world state. The last major system, locomotion, then allows the robot to move about the world to some desired location determined by the behaviour system. In order to perform this task, the robot needs some method of actuating joints in a controllable, fast and energy efficient way. Currently, actuators used by different humanoid league teams are limited to two main products, dynamixel servos \cite{robotis_mx106} or custom designed servo motors. These are both expensive and are limited in the speed and torque which can be output from the actuator. Major leaders in the field of humanoid robotics and robotics mostly use hydraulics \cite{atlas}, this allows them to carry larger payloads and run for longer periods of time. However, this also has it's trade offs increasing the weight of the platform and the speed in which it can move. \newline
 
-Thus the motivation for this project is to design can construct an alternate actuator capable of out performing the currently used actuators as far as the speed, energy efficiency and torque in which it can perform. 
+Humanoid robotics is a fast-developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general artificial intelligence. Robocup \cite{kitano1995robocup}, is just one example of a competition utilising a simple concept, a soccer game, as the platform for the research and development of humanoid robots. Robocup involves teams of humanoid robots attempting to play a game of soccer on a scaled soccer field. Whilst this may seem trivial, in order to play soccer, you need the ability to perform three major tasks. These three tasks consist of vision, localisation, and locomotion. Vision is used to locate objects in the world, balls, goals, field lines and obstacles. This system provides the majority of the information input into the system which is then used to determine the various behaviours and actions to take. Localisation is responsible for determining whether the information is correct and consistent with the previous input data, filtering this information into what the robot perceives as the current world state. The last major system, locomotion, then allows the robot to move about the world to some desired location determined by the behaviour system. In order to perform this task, the robot needs some method of actuating joints in a controllable, fast and energy efficient way. Currently, actuators used by different humanoid league teams are limited to two main products, dynamixel servos \cite{robotis_mx106} or custom designed servo motors. These are both expensive and are limited in the speed and torque which can be output from the actuator. Both of these methods use electrical energy as the main energy system, storing this within Li-Po batteries and converting to a rotating shaft via a motor and gearbox. However, major leaders in the field of humanoid robotics and robotics in general outside of this competition use hydraulics \cite{atlas}, this allows them to carry larger payloads and run for longer periods of time. However, this also has it's trade offs increasing the weight of the platform and the speed in which it can move. \newline
+
+Thus the motivation for this project is to design and construct an alternate actuator capable of out performing the currently used dynamixel actuators in the performance of speed, energy efficiency and torque. 
+
 
 \subsection{Overview}
 \label{sub:overview}
 
-This project is to design and construct a single leg based on a custom developed humanoid robotic platform, focusing on the knee and ankle joints specifically. A mathematical model for the actuator will be used to inform the control system structure and allow the estimation of the current system state. The performance criteria for the actuator will be compared against two currently used dynamixel servos, the \cite{robotis_mx106} and \cite{robotis}.
+As a whole this project is to design and construct a single leg based on a custom developed humanoid robotic platform, focusing on the knee and ankle joints specifically. A mathematical model for the actuator will be used to inform the control system structure and allow the estimation of the current system state. The performance criteria for the actuator will be compared against two currently used dynamixel servos, the MX-106 \cite{robotis_mx106} and XM-540 \cite{robotis}.
+
+Specifically the work to be undertaken within this stage of the project comprises of the design and construction of a single degree of freedom joint which can be position controlled. The work will focus of developing a robust non-linear controller capable of driving a pair of pneumatic muscles via commands sent from a microcontroller. Various sensors will be used to determine the current state of the pneumatic muscles, of which will interface to the microcontroller via a custom PCB shield. The work will focus on developing a framework for the future expansion of the controller to move advanced control schemes, laying a suitable software platform for increased degrees of freedom and muscles.
 
 \newpage
 \subsection{Outline}
 \label{sub:outline}
+
+This report has been organised into four major sections, related work, system implementation and electronics, software architecture, and modelling and control.
+
 \begin{enumerate}
-\item \textbf{Related Work} The current research relevant to the specified project broken into three major areas. The design and construction of functioning pneumatic muscles, control methods used to control linear and non linear systems, and methods of modelling static and dynamic systems. The construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships \cref{sub:staticforcederive}. These models can be extended by considering more complex dynamic characteristics of the system.
-\item \textbf{System Implementation} This project specifically aims to design and construct a knee and ankle joint for a single leg, this will form the basis for the proposed humanoid robotic platform. The knee joint will consist of a pair of muscles acting as the flexion and extension muscles.  These will be placed on the upper leg area of the robot. To achieve the 2 DoF dorsiflexion/plantar flexion and eversion/inversion of the ankle, 2 pairs of coupled muscle actuators will be placed around the lower leg.
-\item \textbf{Testing and Evaluation} Whilst attempting to perform these tests the actuators designed an implemented showed  a  less  than  desirable  lifetime  for  inflation/deflation  cycles.   Three  actuators failed within 10 cycles of inflation.  This is expected to be due to an incompatibility between the inner bladder and the braided mesh as described in [11].  Moving forward different  bladders  will  be  tested  to  determine  an  effective  compatibility  combination by  varying  the  material,  diameter  and  thickness  of  the  selected  bladder.
-\item \textbf{Conclusion} This chapter is a summary of the current progress in the project.
-\item \textbf{Further Work} The second phase of the project as outlined in \cref{sub:gantt_chart} consists of four major stages, the development of a static force map, evaluation of a step response, design and construction of the ankle and knee joints, and development of a model based control scheme.
+\item \textbf{Related Work} The current research relevant to the specified project is broken into three major areas. The design and construction of functioning pneumatic muscles, control methods used to control linear and non linear systems, and methods of modelling static and dynamic systems. The construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder. At one end, the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships \Cref{sub:staticforcederive}. These models can be extended by considering more complex dynamic characteristics of the system.
+
+\item \textbf{System Implementation and Electronics}
+TODO
+\newpage % TODO Remove
+\item \textbf{Software Architecture}
+TODO
+
+\item \textbf{Modelling and Control}
+TODO
+
+\item \textbf{Conclusion} 
+TODO
+\newpage % TODO Remove
+
+\item \textbf{Further Work}
+TODO
 \end{enumerate}
 
 \newpage
@@ -125,29 +146,32 @@ The follow chapter outlines the current research relevant to the specified proje
 
 \subsection{Pneumatic Muscles}
 \label{sub:pneumatic_muscles}
-Pneumatic air muscles have many names fluidic muscle, pneumatic muscle actuator, air muscle, axially contractible actuator, tension actuator, fluid actuator and fluid driven tension actuator \cite{najmuddin_mustaffa_2017} \cite{lau_chai_2012}. These are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. PAM were first developed under the name McKibben Artificial Muscle in the 1950s for use in prosthetic limbs, they were then commercialised by the Bridgestone rubber company in the 1980s under the name Rubbertuators. Since then two major companies have developed PAMs for commercial purposes, Festo and the Shadow Robot Company. As \cref{fig:pneumatic_design} shows, the construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours; these often measure pressure, axial contraction and exerted force of the actuator \cite{erin_pol_valle_park_2016}. \newline
+Pneumatic air muscles have many names fluidic muscle, pneumatic muscle actuator, air muscle, axially contractible actuator, tension actuator, fluid actuator and fluid driven tension actuator \cite{najmuddin_mustaffa_2017} \cite{lau_chai_2012}. These are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. PAM were first developed under the name McKibben Artificial Muscle in the 1950s for use in prosthetic limbs, they were then commercialised by the Bridgestone rubber company in the 1980s under the name Rubbertuators. Since then two major companies have developed PAMs for commercial purposes, Festo and the Shadow Robot Company. As \Cref{fig:pneumatic_design} shows, the construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours; these often measure pressure, axial contraction and exerted force of the actuator \cite{erin_pol_valle_park_2016}. \newline
 
 Pneumatic muscles are the biological motor for locomotion or manipulation with advantages like the passive damping, good power to weight ratio, low maintenance, low price and usage in rough environments \cite{ranjan_upadhyay_kumar_dhyani_2012}. They are ideal for use in human environments in applications of human interaction such as rehabilitation therapy, nursing elderly people, and day to day work support for elderly people \cite{saga_nagase_saikawa_2006}. Compared to traditional actuators in the form of electric servos, pneumatic muscles are highly nonlinear requiring complex controllers to perform precise movements. \newline
 
-\begin{figure}[hbt!]
+% TODO Make this picture a picture of mine with better labels
+\begin{figure}[ht!]
     \centering
-    \caption{Pneumatic Muscle Actuator Design \cite{pneumatic_image}}
     \includegraphics[scale=0.6]{Pneumatic-Muscle-Actuator-Design.png}
+    \caption{Pneumatic Muscle Actuator Design \cite{pneumatic_image}}
     \label{fig:pneumatic_design}
 \end{figure}
 
 Previous studies have looked at alternate sensing methods utilising self-contained displacement and force sensors removing the requirement for external sensing elements that allow the detection of axial contraction force and displacement at the same time. Traditionally linear encoders and load cells have been used to fulfil this task increasing the devices form factor and reducing compliance. Existing solutions include dielectric elastomers, embedded microfluidic elastomers, conductive fibre mesh and inductive coils all of which use changing resistance or inductance to measure the displacement. These mechanisms often require special manufacturing processes that limit the selection of the elastomer \cite{erin_pol_valle_park_2016}. 
-Additionally, research has focused on the compatibility between the braided mesh and the inner bladder. The suitability of the mesh is significant, using the optimum size braided mesh can lead to maximum contraction. Typically, PMA technology provides a maximum contraction of 25-30\% stroke compared to the 50-70\% stroke of the biological muscle \cite{andrikopoulos_nikolakopoulos_2017}. However, when the component dimensions are optimised contraction up to 51.85\% can be achieved \cite{najmuddin_mustaffa_2017}. Incompatibility of the braided mesh with the bladder forms stress regions where the bladder non-uniformly expands. When this happens, the energy is lost, and the contraction percentage is reduced. \newline
+Additionally, research has focused on the compatibility between the braided mesh and the inner bladder. The suitability of the mesh is significant, using the optimum size braided mesh can lead to maximum contraction. 
+% TODO Make a mention that no paper has specified sizes for both items, only a 'Diameter' make this a finding in the report
+Typically, PMA technology provides a maximum contraction of 25-30\% stroke compared to the 50-70\% stroke of the biological muscle \cite{andrikopoulos_nikolakopoulos_2017}. However, when the component dimensions are optimised contraction up to 51.85\% can be achieved \cite{najmuddin_mustaffa_2017}. Incompatibility of the braided mesh with the bladder forms stress regions where the bladder non-uniformly expands. When this happens, the energy is lost, and the contraction percentage is reduced. \newline
 
 The force generated by the pneumatic muscle is dependent on the air pressure, nominal length, contraction ratio and material properties. When the air pressure rises, the muscle circumference increases while its length decreases, causing an increase in the muscle contraction. The resulting pulling force, acting in the axial direction, corresponds to the stresses in the flexible mesh. By controlling pressure, it is possible to control the pulling force and the contraction ratio of the pneumatic muscle. \newline
 
-In order to control the flow of air in and out of the actuator an electrically controlled pneumatic proportional/servo valve can be used to adjust the flow of air. Whilst a proportional valve provides the best continuous flow behaviour, these are expensive, and to control a single muscle would require one on the input and one on the output. To supplement these valves the use of on/off solenoid 3-way 3 port valves can be used, these often are controlled via a pulse width modulation (PWM) signal to approximate proportional valves. However, this frequent valve switching can lead to shorter valve life, reducing the viability of these valves \cite{zhang_bone_2018}. In order to reduce excessive valve switching a sliding-mode control (SMC) algorithm with three operating modes can be implemented ensuring the valves switch only when it is necessary for the desired closed-loop performance. This will be discussed in further detail in the control section of this paper \cref{sub:sliding_mode_control}. \newline
+In order to control the flow of air in and out of the actuator an electrically controlled pneumatic proportional/servo valve can be used to adjust the flow of air. Whilst a proportional valve provides the best continuous flow behaviour, these are expensive, and to control a single muscle would require one on the input and one on the output. To supplement these valves the use of on/off solenoid 3-way 3 port valves can be used, these often are controlled via a pulse width modulation (PWM) signal to approximate proportional valves. However, this frequent valve switching can lead to shorter valve life, reducing the viability of these valves \cite{zhang_bone_2018}. In order to reduce excessive valve switching a sliding-mode control (SMC) algorithm with three operating modes can be implemented ensuring the valves switch only when it is necessary for the desired closed-loop performance. This will be discussed in further detail in the control section of this paper \Cref{sub:sliding_mode_control}. \newline
 
 Numerous studies have been presented into the feasibility of various robotic platforms based around the use of pneumatic muscles. Humanoid Robotic Leg (HURL) was a conceptual 10 degree of freedom (DOF) lower-limb humanoid platform that was a bio-metrically informed mechanical design that attempted to improve biped robots. This research only implemented the ankle joint concluding that a more complex control structure for torque and compliance control was required, utilising a dynamic model for increased performance \cite{andrikopoulos_nikolakopoulos_2017}. Similarly, a quadruped robot driven by Festo air muscles was designed to be a test bed for the implementation and control of pneumatic muscles in legged locomotion. This work suggests the inclusion of a model for the Festo air muscle that incorporates the kinematics of the platform should be implemented in future works \cite{aschenbeck_kern_bachmann_quinn}. Anthropomorphic robotic hand designs have also been designed with the goal of achieving basic human hand grasps. These use nylon tendon-like cables to transmit the power from a forearm section containing the muscles to the end effectors making them suitable for delicate object manipulation \cite{lau_chai_2012}.
 
 \subsection{Control Methods}
 \label{sub:control_methods}
-As mention in \cref{sub:pneumatic_muscles}, pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Often it is possible to linearise a nonlinear plant around some known operating region in order to implement linear control structures. This could be utilised to control pneumatic muscles if the response curve of the actuator had a useful near linear region to linearise about, however, as seen later in \cref{sub:system_modelling} this is not the case and thus a controller designed to handle nonlinear properties should be used. 
+As mentioned in \Cref{sub:pneumatic_muscles}, pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Often it is possible to linearise a nonlinear plant around some known operating region in order to implement linear control structures. This could be utilised to control pneumatic muscles if the response curve of the actuator had a useful near linear region to linearise about, however, as seen later in \Cref{sub:system_modelling} this is not the case and thus a controller designed to handle nonlinear properties should be used. 
 
 \subsubsection{ANPID}
 \label{sub:pid}
@@ -155,20 +179,38 @@ Advanced nonlinear proportional integral differential (ANPID) controllers are an
 
 \subsubsection{Model Predictive Control}
 \label{sub:model_predictive_control}
-%%% Alex: If MPC is known as a good way to handle non-linear control, then yes you should include this. Even if you dont 
-%%% Alex: intend to use it, you should explain why you have discounted this method in favour of another method.
-%%% Alex: You should definitely include it if there are any other PMA works that have used MPC.
+%%% Alex: If MPC is known as a good way to handle non-linear control, then yes you should include this. Even if you dont intend to use it, you should explain why you have discounted this method in favour of another method. You should definitely include it if there are any other PMA works that have used MPC.
 %%% TODO Should this section be included with a lack of research into this topic
-Model predictive control is a method for dealing with multi-variable control problems. It aims to choose a control state by solving the system state model repeatedly, with the goal of minimising the error function into the future horizon. The behaviour is based on a plant model and is highly dependant on the accuracy of this model. Model predictive control is a broader term used to cover a variety of linear and nonlinear control stuctures including Kalman and Unscented Kalman Filters.
+Model predictive control is a method for dealing with multi-variable control problems. It aims to choose a control state by solving the system state model repeatedly, with the goal of minimising the error function into the future horizon. The behaviour is based on a plant model and is highly dependant on the accuracy of this model. Model predictive control is a broader term used to cover a variety of linear and nonlinear control stuctures including Kalman and Unscented Kalman Filters.\newline
+TODO This needs more add image
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
 
 \subsubsection{Sliding Mode Control}
 \label{sub:sliding_mode_control}
-As mention previously sliding-mode control (SMC) is an algorithm for controlling the position of a pneumatic cylinder by directly switching four on/off solenoid valves. SMC is used to provide superior performance in terms of valve switches per second (SPS), steady state error (SSE), setting time and overshoot. These valves are much less expensive than the proportional/servo style valves, however, have a discontinuous flow behaviour making smooth and precise position control more difficult to achieve. While PWM may be used with on/off valves to approximate proportional valves, this frequent switching reduced the lifetime of the valve \cite{zhang_bone_2018}. \newline
+As mention previously sliding-mode control (SMC) is an algorithm for controlling the position of a pneumatic cylinder by directly switching four on/off solenoid valves. SMC is used to provide superior performance in terms of valve switches per second (SPS), steady state error (SSE), settling time and overshoot. These valves are much less expensive than the proportional/servo style valves, however, have a discontinuous flow behaviour making smooth and precise position control more difficult to achieve. While PWM may be used with on/off valves to approximate proportional valves, this frequent switching reduced the lifetime of the valve \cite{zhang_bone_2018}. \newline
 This algorithm known as SMC or three-mode sliding mode control (SMC3) can be extended to operate with seven regions of control (SMC7), with the goal of reducing the number of valve SPS. The mode producing the larger acceleration should be chosen since it will reduce the tracking error faster. By adding integral action to these existing algorithms, a reduced settling time and SSE can be achieved if properly applied. Furthermore, by bounding this integral action anti-windup is achieved reducing overshoot and settling time. These extended controllers are referred to as ISMC3 and ISMC7 and can reduce the SPS by up to 37\% when compared to the original SMC implementation whilst maintaining the position tracking error \cite{zhang_bone_2018}.
 
 \subsection{System Modelling}
 \label{sub:system_modelling}
-The modelling of a multi-variable system allows current input values to predict future values of the output. This can be combined with real world system measurements to accurately create an error signal proportional to the system error. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships. These models can be extended by considering more complex dynamic characteristics of the system.
+The modelling of a multi-variable system allows present input values to predict future values of the output. This can be combined with real world system measurements to accurately create an error signal proportional to the system error. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships. These models can be extended by considering more complex dynamic characteristics of the system.
 
 \subsubsection{Static Modelling}
 \label{sub:static_modelling}
@@ -176,15 +218,16 @@ Most robotic systems driven by PMAs required an underlying torque controller. Th
 
 \begin{figure}[hbt!]
     \centering
+    \includegraphics[scale=0.8]{staticmap.eps}
     \caption{Force vs. pressure vs. length with initial length 280mm and diameter 20mm}
-    \includegraphics[scale=0.6]{staticmap.eps}
     \label{fig:staticmap}
 \end{figure}
 
-By considering both the pneumatic air compression modelling approach and the mechanical spring with varying stiffness approach, one can determine a physically motivated model that is closer to the measure force characteristic of a PMA than any existing model. The idea is the approximation of a PMA as a piston with a virtual, pressure dependent piston area and a spring that counteracts the expansion. This approach has been compared to existing models resulting in the maximum error between the new model and the measured data below 4.4\% \cite{martens_boblan_2017}. This model can be represented by a 3D static force map \cref{fig:staticmap} as a function of the pressure internal to the system and the length or contraction percentage. As seen in \cref{math:staticforce} the force generated is only dependent on the work done by the volume of air and the elasticity of the membrane, see Appendix \cref{sub:staticforcederive} for the derivation.
+By considering both the pneumatic air compression modelling approach and the mechanical spring with varying stiffness approach, one can determine a physically motivated model that is closer to the measure force characteristic of a PMA than any existing model. The idea is the approximation of a PMA as a piston with a virtual, pressure dependent piston area and a spring that counteracts the expansion. This approach has been compared to existing models resulting in the maximum error between the new model and the measured data below 4.4\% \cite{martens_boblan_2017}. This model can be represented by a 3D static force map \Cref{fig:staticmap} as a function of the pressure internal to the system and the length or contraction percentage. As seen in \Cref{math:staticforce} the force generated is only dependent on the work done by the volume of air and the elasticity of the membrane, see Appendix \Cref{sub:staticforcederive} for the derivation.
 
 \begin{equation}
 F_{PMA}(\rho, l) = -\rho.\frac{dV}{dL}+F_{PE}.\frac{dD}{dL}-F_L
+%% TODO Define what these vaiables are
 \label{math:staticforce}
 \end{equation}
 
@@ -192,7 +235,7 @@ F_{PMA}(\rho, l) = -\rho.\frac{dV}{dL}+F_{PE}.\frac{dD}{dL}-F_L
 \label{sub:dynamic_modelling}
 Pneumatic air muscles have their own dynamics, like hysteresis, some thermodynamic effects and can even be interpreted as a mass spring damper combination \cite{martens_boblan_2017}. Models dependent on the construction parameter and air pressure have been developed providing a tensile force formula of the contractor actuator and can be modified to describe the extension force. One model based on a combination of sigmoid functions representing the force output as a function of both the air pressure and initial length, is an estimation derived from three experimental results over varying lengths. This model assumes an average extension ratio of 50\%, the perfect cylindrical shape with zero wall thickness of the inner bladder, constant friction-less contact between the braid and inner tube, constant braid strand length and elasticity of the rubber tube. This model lacks an accurate description of the complex non-cylindrical shape at low pressures and the imperfect contact between the inner tube and braided sleeve \cite{al-ibadi_nefti-meziani_davis_2018}. \newline
 
-Extending this the problem can be approached firstly as a mechanically derived nonlinear spring, the stiffness of which can be controlled by the muscle pressure. This relationship can be depicted by a fifth order polynomial of two variables of 21 coefficients. The pneumatic part of the model is divided into two main components, the model of volume flow rate through the valves and a differential equation for the muscle pressure. The use of on/off style solenoid valves simplifies the flow rate to either a constant compressor pressure or atmospheric pressure, solely dependent on the muscle pressure. The second pneumatic component is the derivative time dependent equation derived from ideal gas laws. This research found that the hysteresis effects of the muscle actuator cause some steady state error due to simplified descriptions of the mechanical force components. Refinement of the model could decrease the errors to reduce the reliance on the robustness of the control technique \cite{hosovsky_2012}. Below is the equation found representing these forces \cref{math:dynamicforce}, where m - moving mass (kg), y - muscle displacement (m), F\textsubscript{S}(k,P\textsubscript{m}) - nonlinear term representing a variable spring force (N), F\textsubscript{D}(\.{k},P\textsubscript{m}) - nonlinear term representing a variable damper force (N), F\textsubscript{E} - external force (N), k - muscle contraction (defined as k = k\textsubscript{0} + y/l\textsubscript{0} where k\textsubscript{0} is the initial contraction and l\textsubscript{0} is the initial muscle length (-) and P\textsubscript{m} - the absolute muscle pressure (Pa).
+Extending this, the problem can be approached as a mechanically derived nonlinear spring, the stiffness of which can be controlled by the muscle pressure. This relationship can be depicted by a fifth order polynomial of two variables of twenty-one coefficients. The pneumatic part of the model is divided into two main components, the model of volume flow rate through the valves and a differential equation for the muscle pressure. The use of on/off style solenoid valves simplifies the flow rate to either a constant compressor pressure or atmospheric pressure, solely dependent on the muscle pressure. The second pneumatic component is the derivative time dependent equation derived from ideal gas laws. This research found that the hysteresis effects of the muscle actuator cause some steady state error due to simplified descriptions of the mechanical force components. Refinement of the model could decrease the errors to reduce the reliance on the robustness of the control technique \cite{hosovsky_2012}. Below is the equation found representing these forces \Cref{math:dynamicforce}, where m - moving mass (kg), y - muscle displacement (m), F\textsubscript{S}(k,P\textsubscript{m}) - nonlinear term representing a variable spring force (N), F\textsubscript{D}(\.{k},P\textsubscript{m}) - nonlinear term representing a variable damper force (N), F\textsubscript{E} - external force (N), k - muscle contraction (defined as k = k\textsubscript{0} + y/l\textsubscript{0} where k\textsubscript{0} is the initial contraction and l\textsubscript{0} is the initial muscle length (-) and P\textsubscript{m} - the absolute muscle pressure (Pa).
 
 \begin{equation}
     \ddot{y} = \frac{1}{m}[F_E-F_S(k,P_m)-F_D(\dot{k},P_m)]
@@ -200,14 +243,17 @@ Extending this the problem can be approached firstly as a mechanically derived n
 \end{equation}
 
 \newpage
-\section{System Implementation}
+\section{System Implementation and Electronics}
 \label{sec:system_implementation}
+
+The following section outlines the ultimate goal of the project describing a platform design that should more closely mimic a human. A test rig has been developed to assess the success of pneumatic muscles as an actuator.
 
 \subsection{Platform Design}
 \label{sub:platform_design}
-The ultimate goal of this design, dubbed PNEUbot, will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \cref{fig:platform} this platform has been designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. Due to the reduced contraction of pneumatic muscles 25-30\% compared to the 50-70\% stroke of a human muscle, design constraints needed to be placed on some DoF for the range of motion available for that joint. Consequently, due to the force curve produced by pneumatic muscles, the force capable of being produced at the end of a muscle stroke is limited by its physical parameters. This project specifically aims to design and construct a knee and ankle joint for a single leg, this will form the basis for the platform.\newline
 
-The current world class strictly humanoid robotic platform was designed by a German team from the University of Bonn. This platform stands 135cm tall, weighs 18kg and has 18 DoF: 5 per leg (parallel kinematics), 3 per arm and 2 in the neck \cite{ficht_farazi_brandenburger_rodriguez_pavlichenko_allgeuer_hosseini_behnke_2018}. These servos can produce 12.9 N.m of stall torque with a maximum rpm of 37 at no load at a 12-bit resolution \cite{robotis}. For this project, this platform will be the benchmark for the use of pneumatic air muscles as an alternate actuator. \newline
+The ultimate goal of this design, dubbed PNEUbot, will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \Cref{fig:platform} this platform has been conceptually designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. As an alternate actuator, pneumatic muscles have a limited contraction of 25-30\% when compared to the 50-70\% stroke of a human muscle, design constraints needed to be placed on some DoF joints for the range of motion available for that joint due to this reduced contraction. Consequently, due to the force curve produced by pneumatic muscles, the force capable of being produced at the end of a muscle stroke is limited by its physical parameters. The ultimate project specifically aims to design and construct a knee and ankle joint for a single leg, this will form the basis for the platform.\newline
+
+The current world class strictly humanoid robotic platform was designed by a German team from the University of Bonn. This platform stands 135cm tall, weighs 18kg and has 18 DoF: 5 per leg (parallel kinematics), 3 per arm and 2 in the neck \cite{ficht_farazi_brandenburger_rodriguez_pavlichenko_allgeuer_hosseini_behnke_2018}. These servos can produce 12.9 N.m of stall torque with a maximum rpm of 37 at no load at a 12-bit resolution \cite{robotis}. For this overall project, this platform will be the benchmark for the use of pneumatic air muscles as an alternate actuator. \newline
 
 \begin{figure}[hbt!]
     \centering
@@ -239,34 +285,108 @@ The current world class strictly humanoid robotic platform was designed by a Ger
     \label{fig:platform}
 \end{figure}
 
+\subsubsection{Leg Design}
+\label{subsubsection:leg_design}
+
 To achieve a lightweight skeleton the robot will be constructed from aluminium extrusion 'bones', 3D printed mounts and protective covers. Bearings will be inserted into the knee joint, with a spherical ball joint forming the ankle pivot. High tensile nylon line will act as tendons providing the transmission of the pneumatic muscle force to the actuated joint. \newline
 
 The knee joint will consist of a pair of muscles acting as the flexion and extension muscles. These will be placed on the upper leg area of the robot producing approximately 120$^{\circ}$ of motion. To achieve the 2 DoF dorsiflexion/plantar flexion and eversion/inversion of the ankle, 2 pairs of coupled muscle actuators will be placed around the lower leg. These muscles will be coupled as opposed to decoupled to provide a parallel actuation force for the plantar flexion of the ankle joint. This should theoretically reduce the force required from each muscle and thus the size of the muscles contained in the lower leg. 
 
-\subsection{Muscle Construction}
-\label{sub:muscle_construction}
-
-The pneumatic muscles are constructed from two major components, the inner bladder and the outer braided mesh. The inner bladder was chosen with an internal diameter of 6mm and wall thickness of 1.5mm, this is due to the availability and cost factors for initial testing and will likely be increased. The braided mesh of 20mm diameter was selected to be compatible with the bladder diameter as according to \cite{andrikopoulos_nikolakopoulos_2017}.
-
-\subsection{Pneumatic Control}
-\label{sub:pneumatic_control}
-
-In order to control the flow of air into and out of the muscle bladder a 3 port 2-way pneumatic solenoid valve was used in conjunction with a non-return valve \cite{airsky_pneumatic}. These components were assembled as shown in \cref{fig:pneumatic_valve}, this arrangement allows each muscle to be in 1 of 2 states which some transitions states occurring.
+\subsubsection{Test Rig}
+\label{subsubsection:Test Rig}
+% This will be about the 1 DoF setup i have. Can include a picture and model of it. Basically mimicks the knee in the leg design
+As mentioned previously the focus of this specific stage of the overall project is to develop a software framework that can be utilised in the control of the pneumatic muscles. A test rig \Cref{fig:test_rig} has been devised that replicates the motion of the single degree of freedom knee joint proposed in the leg design. It consists of two identical counteracting muscles which are connected to a pivot via a nylon line. The rig allows the addition of variable mass of the rotating arm to test the control structures response to varying conditions. The pivot disc allows the muscles to rotate around a 94mm diameter increasing the torque capable of being produced whilst maintaining adequate range of motion.
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+\newline %TODO Remove
+TODO add image
 
 \begin{figure}[hbt!]
     \centering
-    \caption{Single Muscle Actuator Assembly}
+    \centering
+    \begin{subfigure}[t]{0.4 \textwidth}
+        \centering
+        \caption{Test Rig}
+        \includegraphics[scale=0.2]{}
+        \label{fig:test_rig_photo}
+    \end{subfigure}\\
+    \begin{subfigure}[t]{0.4 \textwidth}
+        \centering
+        \caption{Design Concept}
+        \includegraphics[scale=0.2]{}
+        \label{fig:test_rig_design}
+    \end{subfigure}
+    \caption{1 DoF Test Rig}
+    \label{fig:test_rig}
+\end{figure}
+
+
+\subsection{Muscle Construction and Control}
+\label{sub:muscle_construction}
+
+The following section describes the pneumatic muscle design and construction with the goal of finding a compatible set of materials for the two major items. Furthermore, the pneumatic system design and construction is also detailed.
+
+\subsubsection{Muscle Design}
+\label{subsubsection:muscle_design}
+The pneumatic muscles are constructed from two major components, the inner air tight bladder and the outer braided mesh. These two components must be chosen to be 'compatible' with each other, this meaning that the diameters of the two components should be as close a possible. As the difference diameter of the bladder and braid increase, the inflation of the muscle can become irregular. This can cause uneven stresses and pressures on the inside of the bladder leading to premature failure. Failure can occur in the 'rings' \Cref{fig:incompatible_rings} that form around the circumference of the bladder, this non-uniform expansion results in increased pressure on parts of the bladder causing failure. Another problem can occur when the braid appears to 'banana' \Cref{fig:incompatible_banana} this is caused again by the non-uniform expansion of the bladder however, forms a banana shape when one side of the braid contracts prematurely which can also result in failure. Both of these failures were seen in testing when the resting diameters of the two components differed by more than $30\%$ as seen in \Cref{fig:incompatible_muscles}.
+
+\begin{figure}[hbt!]
+    \centering
+    \centering
+    \begin{subfigure}[t]{0.45 \textwidth}
+        \centering
+        \includegraphics[scale=0.1]{MuscleRinging.png}
+        \caption{Muscle Ringing}
+        \label{fig:incompatible_rings}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45 \textwidth}
+        \centering
+        \includegraphics[scale=0.1]{MuscleBananaing.png}
+        \caption{Muscle Bananaing}
+        \label{fig:incompatible_banana}
+    \end{subfigure}
+    \caption{Muscle Failures}
+    \label{fig:incompatible_muscles}
+\end{figure}
+
+The final design inner bladder was chosen with an internal diameter of 16mm and wall thickness of 2mm, the specific material used was a road bike tube. The braided mesh of 20mm diameter was selected to be compatible with the bladder diameter as according to the experiments run previously and other literature \cite{andrikopoulos_nikolakopoulos_2017}.
+
+\subsubsection{Pneumatic Control}
+\label{subsubsection:pneumatic_control}
+
+In order to control the flow of air into and out of the muscle bladder a 3 port 2-way pneumatic solenoid valve was used in conjunction with a non-return valve \cite{airsky_pneumatic}. These components were assembled as shown in \Cref{fig:pneumatic_valve}, this arrangement allows each muscle to be in 1 of 2 states. One muscle alone isn't overly useful as it only has the ability to actively move in a single direction, a pair of muscles on the other hand can be arranged to generate opposing forces resulting in a more useful motion capability. \newline
+
+\begin{figure}[hbt!]
+    \centering
     \scalebox{0.5}{
         \begin{tikzpicture}
             % Left half
             \draw[very thick] (0, 0) rectangle (5, 5);
-            \draw[very thick,black,-{Triangle}] (1.25, 0) -- (1.25, 5);
+            \draw[very thick,black,->] (1.25, 0) -- (1.25, 5);
             \draw[very thick,black] (3.75, 0) -- (3.75, 1);
             \draw[very thick,black] (3.25, 1) -- (4.25, 1);
     
             % Right half
             \draw[very thick] (5, 0) rectangle (10, 5);
-            \draw[very thick,black,-{Triangle}] (6.75, 5) coordinate (A) -- (8.75, 0) coordinate (R);
+            \draw[very thick,black,->] (6.75, 5) coordinate (A) -- (8.75, 0) coordinate (R);
             \draw[very thick,black] (6.25, 0) -- (6.25, 1) coordinate (P);
             \draw[very thick,black] (5.75, 1) -- (6.75, 1);
             \draw[very thick,black] (8.75, 0) -- (8.75, -1);
@@ -315,42 +435,330 @@ In order to control the flow of air into and out of the muscle bladder a 3 port 
             \draw[very thick] let \p1=($(P) - (0, 6.5)$), \p2=($(P) - (0, 10)$) in (\x1, \y1) -- (\x2, \y2) node[midway,label=right:{\LARGE{Regulated Air In}}]{};
         \end{tikzpicture}
     }
+        \caption{Single Muscle Actuator Assembly}
     \label{fig:pneumatic_valve}
 \end{figure}
 
-Consider one muscle under no load when its internal pressure is equal to the regulated system pressure, the muscle will be under full contraction. Releasing the air from the muscle will allow the muscle to extend back to its nominal length. Switching between the two valve states will allow the muscle to contract and release. Now consider the case where two muscles of equal parameters are appended end to end. Starting with both muscles at equilibrium pressure, regulated system pressure, the contraction percentage of both muscles will be equal. Switching the first muscle into the open position will allow the air to release from that muscle, this also allows the second muscle to contract filling with air. When the required position is reached the first muscle can be switched closed, causing the muscle to re-pressurise stopping the contraction of the second muscle. If the non-return valve was not installed, the system would be able to equalise the pressure between the two muscles when the force generated by each muscle was different due to the different contraction percentages. These states are like the SMC3 modes, however, the use of two valves per pair of muscles instead of four reduces the cost of the valves for the system. This also means that a SMC7 implementation is not possible, due to the limited number of states that the valve positions can form.
-Each valve is controlled by the circuit described in \cref{sub:shield} by the micro controller \cref{sub:microcontroller}.
+Consider one muscle under no load when its internal pressure is equal to the regulated system pressure, the muscle will be under full contraction. Releasing the air from the muscle will allow the muscle to extend back to its nominal length. Switching between the two valve states will allow the muscle to contract and release. Now consider the case where two muscles of equal parameters are appended end to end with opposing force vectors. Starting with both muscles at equilibrium pressure, regulated system pressure, the contraction percentage of both muscles will be equal. Switching the first muscle into the open position will allow the air to release from that muscle, this also allows the second muscle to contract filling with air. When the required position is reached the first muscle can be switched closed, causing the muscle to re-pressurise stopping the contraction of the second muscle. If the non-return valve was not installed, the system would be able to equalise the pressure between the two muscles when the force generated by each muscle was different due to the different contraction percentages. These states \Cref{tab:valve_states} are like the SMC3 modes, however, the use of two valves per pair of muscles instead of four reduces the cost of the valves for the system. This also means that a SMC7 implementation is not possible, due to the limited number of states that the valve positions can form.
+Each valve is controlled by the circuit described in \Cref{sub:shield} by the microcontroller \Cref{sub:microcontroller}.
 
-\subsection{Sensors}
+\begin{table}[hbt!]
+    \centering
+    \caption{Valve States}
+    \begin{tabular}{l l | l l | l l}
+            \multicolumn{6}{c}{\textbf{Mode}} \\
+        \hline
+            \multicolumn{2}{c}{positive} & \multicolumn{2}{c}{negative} & \multicolumn{2}{c}{no move}\\
+        \hline
+            P_{11} = P_{m1} & P_{a} = P_{m1}  & P_{11} = P_{T}  & P_{12} = P_{m1} & P_{11} = P_{T} & P_{12} = P_{m1}\\
+            P_{21} = P_{T}  & P_{22} = P_{m2} & P_{21} = P_{m2} & P_{22} = P_{a}  & P_{21} = P_{T} & P_{22} = P_{m2}\\
+        \hline
+    \end{tabular}
+    \label{tab:valve_states}
+\end{table}
+
+
+\subsection{Electronics}
+\label{subsection:electronics}
+
+\subsubsection{Sensors}
 \label{sub:sensors}
-To measure the states of the system, pressure and linear position, a pressure sensor and linear potentiometer have been chosen. The pressure sensor is placed after the valve on the muscle side of the actuator. This pressure sensor \cite{NBPLANN100PGUNV} allows readings from 0 to 100 psi and was attached to a custom PCB that provides a differential reading of the sensor to be fed into the micro controller. A rotary potentiometer or encoder could have been used for the axial position measurement and placed on the rotational axis of each joint, however, the design and construction for the 2 DoF ankle joint would be more complex. This then lends itself to the use of linear potentiometers attached to the end of each muscle, eliminating the need to a sensor attached directly to the rotational axis. This solution directly reads the contraction distance of the muscle rather than the ankle of the joint, requiring some knowledge of the robot kinematics to calculate the angular position.
 
-\subsection{Micro controller}
-\label{sub:microcontroller}
-For an entire PNEUbot leg with 6 DoF, a total of 12 muscles would be needed to achieve the required movement. This in turn would require 24 sensor inputs to read the pressure and position of each muscle. This requires a micro controller that contains 24 ADC channels, one for each sensor, that can run fast enough to compute the control methods implemented and perform the sensor readings. The NUCLEO-STM32F722ZE \cite{nucleo_stm32f722ze} has 24 individual ADC channels available and runs with a maximum clock frequency of 216MHz, this micro controller should allow enough processing overhead to achieve the required task.
-
-\subsubsection{Electronics Shield}
-\label{sub:shield}
-In order to control the valves and read the pressure and potentiometer sensors a PCB was designed to hold the logic level MOSFET control circuits for each valve. This board also contains a differential amplifier circuit that is driven by the pressure sensor, with breakout headers for all the external sensors. The shield plugs into the micro controller via the ST-Morpho connectors on the NUCLEO board. %% TODO Design this board... \cref{fig:shield}.
-
-\subsubsection{Software}
-\label{sub:software}
-The software architecture follows the structure shown in \cref{fig:software_arch}. The system is comprised of three major subsystems, the Leg Controller, ADC, and the Joints. The first subsystem, the leg controller takes the requested leg positions via an end effector or motion command and calculates the inverse and forward kinematics to determine the angle of each joint. The second subsystem, the ADC reads in sequence each of the sensors updating the data fed into the control loop as often as possible. The third subsystem consists an instance of each joint in the system. One and two axis joints are implemented each of which contain an instance of all the muscles for that specific joint as well as a controller which takes the reference angles for the joints and drives the setpoint for each muscle. Each muscle then also contains a valve, pressure sensor and linear potentiometer associated with that muscle as well as the relevant micro controller pins. This software structure allows all muscles to contain the same base control methods with varying parameters between them.
+To measure the states of the system, pressure, linear position and velocity, a pressure sensor and linear potentiometer have been chosen. The pressure sensor is placed after the valve on the muscle side of the actuator. This pressure sensor \cite{NBPLANN100PGUNV} allows readings from 0 to 100 psi and was attached to a custom PCB \Cref{fig:pres_sense} that provides a differential reading of the sensor to be fed into the microcontroller. As for the position, a rotary potentiometer or encoder could have been used for the axial position measurement and placed on the rotational axis of each joint, however, the design and construction for the 2 DoF ankle joint would be more complex. This then lends itself to the use of linear potentiometers attached to the end of each muscle, eliminating the need to a sensor attached directly to the rotational axis. This solution directly reads the contraction distance of the muscle rather than the angle of the joint, requiring some knowledge of the robot kinematics to calculate the angular position.
 
 \begin{figure}[hbt!]
     \centering
-    \caption{Software architecture}
-    \includegraphics[scale=0.5]{Software_Arch.png}
+    \includegraphics[angle=270, origin=c, clip, trim=0cm 0cm 0cm 0cm, width=0.3\textwidth]{PressureSensorPCB.pdf}
+    \caption{Pressure Sensor PCB}
+    \label{fig:pres_sense}
+\end{figure}
+
+\subsubsection{Microcontroller}
+\label{sub:microcontroller}
+
+For an entire PNEUbot leg with 6 DoF, a minimum total of 12 muscles would be needed to achieve the required movement. This in turn would require 24 sensor inputs to read the pressure and position of each muscle. This requires a microcontroller that contains 24 ADC channels, one for each sensor, that can run fast enough to compute the control methods implemented and perform the sensor readings. The NUCLEO-STM32F722ZE \cite{nucleo_stm32f722ze} has 24 individual ADC channels available and runs with a maximum clock frequency of 216MHz, this microcontroller should allow enough processing overhead to achieve the required task.
+
+\newline TODO Does this have enough overhead? What were the parameters that got me there?
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+\newline % TODO Remove
+
+\subsubsection{Electronics Shield}
+\label{sub:shield}
+
+In order to control the valves and read the pressure and potentiometer sensors a shield PCB \Cref{fig:shield} was designed to hold the logic level MOSFET control circuits for each valve. This board also contains a differential amplifier circuit that is driven by the pressure sensor, with breakout headers for all the external sensors. The shield plugs into the microcontroller via the ST-Morpho connectors on the NUCLEO board.
+
+\begin{figure}[hbt!]
+    \centering
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[angle=270, origin=c, clip, trim=0cm 8cm 0cm 8cm, width=1.00\textwidth]{ShieldPCB.pdf}
+        \caption{Shield PCB}
+        \label{fig:shield_PCB}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[angle=270, origin=c, clip, trim=0cm 8cm 0cm 8cm, width=1.00\textwidth]{ShieldPCB.pdf}
+        \caption{Shield}
+        \label{fig:shield_photo}
+    \end{subfigure}
+    \caption{Electronics Shield}
+    \label{fig:shield}
+\end{figure}
+
+\newpage
+\section{Modelling and Control}
+\label{section:modeling_and_control}
+
+\subsection{Muscle Modelling}
+\label{sub:muscle_modelling}
+As this project is focused on the development of a framework and single degree of freedom pneumatic joint the model used has been taken from an existing source. As mentioned in \Cref{sub:dynamic_modelling} the modelling of a pneumatic muscle can be approached as a mechanically deived nonlinear spring, of which the stiffness can be controlled as a function of the muscle pressure. This relationship can be depicted by a fifth order polynomial of two variables of twenty-one coefficients. The pneumatic part of the model is divided into two main components, the model of volume flow rate through the valves and a differential equation for the muscle pressure. The use of on/off style solenoid valves simplifies the flow rate to either a constant compressor pressure or atmospheric pressure, solely dependent on the muscle pressure. The second pneumatic component is the derivative time dependent equation derived from ideal gas laws. Below is the equation found representing these forces \Cref{math:dynamicforce2}, where m - moving mass (kg), y - muscle displacement (m), F\textsubscript{S}(k,P\textsubscript{m}) - nonlinear term representing a variable spring force (N), F\textsubscript{D}(\.{k},P\textsubscript{m}) - nonlinear term representing a variable damper force (N), F\textsubscript{E} - external force (N), k - muscle contraction (defined as k = k\textsubscript{0} + y/l\textsubscript{0} where k\textsubscript{0} is the initial contraction and l\textsubscript{0} is the initial muscle length (-) and P\textsubscript{m} - the absolute muscle pressure (Pa).
+
+\begin{equation}
+    \ddot{y} = \frac{1}{m}[F_E-F_S(k,P_m)-F_D(\dot{k},P_m)]
+    \label{math:dynamicforce2}
+\end{equation}
+
+However, this system only describes the dynamics of a single muscle arrangement, which is not the arrangement used in the project. To derive an equation that represents the dynamics of a two muscle system a few assumptions can be made. 
+\begin{itemize}
+  \item The position and be inheritance the velocity of a only single muscle is required to be known to solve the differential equations. This is due to the rigid nature of the coupling between the two muscles. 
+  \item The friction lost at the pivot point is negligible.
+  \item The nylon line that attaches the two muscles cannot stretch and remains taught at all times.
+  \item The mass of the two muscles is combined into a single mass.
+\end{itemize}
+
+From these assumptions the model \Cref{math:dynamicforce2} above can be altered to the following:
+
+\begin{equation}
+    \ddot{y} = \frac{1}{m}[F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})+F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]
+    \label{math:two_muscle_ode}
+\end{equation}
+
+To make calculating the system equations more manageable a state space representation \Cref{math:state_space_representation} of the second order ODE can be calculated resulting in the following set of equations \Cref{math:state_space_matrix}. These equations don't strictly contain any input or output variables and thus reduce to only a single $\boldsymbol{A}$ matrix.
+
+% TODO Fix this reference error
+
+\begin{align}
+    \label{math:state_space_representation}
+    \dot{x} &= \boldsymbol{A}x + \boldsymbol{B}u\\
+    y &= \boldsymbol{C}x + \boldsymbol{D}u\nonumber 
+\end{align}
+
+% TODO Fix the number next to this
+
+\begin{equation}
+\begin{bmatrix}
+        \dot{y}\\
+        \ddot{y}\\
+        \dot{P_{m1}}\\
+        \dot{P_{m2}}\\
+    \end{bmatrix}
+    = \fdv{F}{z}\left[\boldsymbol{\chi}\right]
+    \begin{bmatrix}
+        y\\
+        \dot{y}\\
+        P_{m1}\\
+        P_{m2}\\
+    \end{bmatrix}
+    \label{math:state_space_matrix}
+\end{equation}
+where
+\begin{equation*}
+        \boldsymbol{\chi} = 
+    \begin{bmatrix}
+        \dot{y}\\
+        \frac{1}{m}[F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})+F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]\\
+        \frac{1}{V_{m1}}(P_a\dot{V_{a1}}-P_{m1}\dot{V_{m1}})\\
+        \frac{1}{V_{m2}}(P_a\dot{V_{a2}}-P_{m2}\dot{V_{m2}})\\
+    \end{bmatrix}
+\end{equation*}
+
+The partial differential of each state function with respect to each state then forms the final $\boldsymbol{A}$ matrix \Cref{math:A_matrix}.
+
+\begin{equation}
+    \boldsymbol{A} =
+    \begin{bmatrix}
+    0 & 1 & 0 & 0\\
+    \alpha_{10} & \alpha_{11} & \alpha_{12} & \alpha_{13}\\
+    \alpha_{20} & \alpha_{21} & \alpha_{22} & 0\\
+    \alpha_{30} & \alpha_{31} & 0 & \alpha_{33}\\
+    \end{bmatrix}
+    \label{math:A_matrix}
+\end{equation}
+
+To complete the model of the pneumatic muscles the remaining constant variables must be known, some of these are taken from the model paper \cite{hosovsky_2012}, and some are muscle dependent parameters, the most complex of which is a 21 coefficient polynomial relating the force produced by the muscle to the pressure and contraction length.
+
+
+% TODO Put these in the Appendix probably
+
+% \begin{equation}
+%     \alpha_{10} = \fdv{F_2}{z_1} = \frac{1}{m}[dk_{CE2}F_{CE2}P_{CE2}-dk_{CE1}F_{CE1}P_{CE1}]\\
+%     \label{math:alpha_10_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{11} = \fdv{F_2}{z_2} =
+%     \label{math:alpha_11_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{12} = \fdv{F_2}{z_3} =
+%     \label{math:alpha_12_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{13} = \fdv{F_2}{z_4} =
+%     \label{math:alpha_13_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{20} = \fdv{F_3}{z_1} =
+%     \label{math:alpha_20_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{21} = \fdv{F_3}{z_2} =
+%     \label{math:alpha_21_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{22} = \fdv{F_3}{z_3} =
+%     \label{math:alpha_22_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{30} = \fdv{F_4}{z_1} =
+%     \label{math:alpha_30_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{31} = \fdv{F_4}{z_2} =
+%     \label{math:alpha_31_matrix}
+% \end{equation}
+% \begin{equation}
+%     \alpha_{33} = \fdv{F_4}{z_4} =
+%     \label{math:alpha_33_matrix}
+% \end{equation}
+
+
+\subsubsection{Static Mapping}
+\label{sub:static_mapping}
+The static map represents the relationship of force produced by the muscle to the pressure and contraction length. This can be represented  21 coefficient polynomial, reduced into an upper left hand triangle 6x6 matrix surrounded by two vector multiplications. This surface has been calculated in Matlab using the model from \cite{martens_boblan_2017} as the relationship between the three variables. From this surface a polynomial can be fit approximated as a 5\textsuperscript{th} order polynomial. As seen in the table below \Cref{tab:polynomial_coefficients} the coefficients calculated are within 95\% of the surface.
+
+\begin{equation}
+F_{S}(k,P_m) = 
+\begin{bmatrix}
+        1 & k & k^2 & k^3 & k^4 & k^5\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \rho_{00} & \rho_{01} & \rho_{02} & \rho_{03} & \rho_{04} & \rho_{05}\\
+        \rho_{10} & \rho_{11} & \rho_{12} & \rho_{13} & \rho_{14} & 0\\
+        \rho_{20} & \rho_{21} & \rho_{22} & \rho_{23} & 0         & 0\\
+        \rho_{30} & \rho_{31} & \rho_{32} & 0         & 0         & 0\\
+        \rho_{40} & \rho_{41} & 0         & 0         & 0         & 0\\
+        \rho_{50} & 0         & 0         & 0         & 0         & 0\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        1\\
+        P_m\\
+        P_m^2\\
+        P_m^3\\
+        P_m^4\\
+        P_m^5\\
+    \end{bmatrix}
+    \label{math:fce_matrix}
+\end{equation}
+\begin{table}[hbt!]
+    \centering
+    \caption{Polynomial Coefficients}
+    \begin{tabular}{|r||r|r|r|}
+        \hline
+            \multicolumn{4}{|c|}{Polynomial Coefficients} \\
+        \hline
+            Matrix Element & Mean Coefficient & Minimum & Maximum\\
+        \hline
+            $\rho$_{00} & 76.27      & 76.25      & 76.29\\
+            $\rho$_{10} & 1.515e+12  & -1.512e+13 & 1.815e+13\\
+            $\rho$_{01} & -1.515e+12 & -1.815e+13 & 1.512e+13\\
+            $\rho$_{20} & 7.645e+12  & -3.98e+12  & 1.927e+13\\
+            $\rho$_{11} & -1.984e+13 & -3.816e+13 & -1.518e+12\\
+            $\rho$_{02} & 1.219e+13  & -2.637e+12 & 2.702e+13\\
+            $\rho$_{30} & -1.535e+13 & -3.118e+13 & 4.877e+11\\
+            $\rho$_{21} & 3.063e+13  & 9.519e+12  & 5.174e+13\\
+            $\rho$_{12} & -1.087e+13 & -3.451e+13 & 1.277e+13\\
+            $\rho$_{03} & -4.412e+12 & -2.166e+13 & 1.284e+13\\
+            $\rho$_{40} & 2.531e+13  & 1.529e+13  & 3.532e+13\\
+            $\rho$_{31} & -2.712e+13 & -3.913e+13 & -1.511e+13\\
+            $\rho$_{22} & -1.771e+13 & -2.676e+13 & -8.651e+12\\
+            $\rho$_{13} & 1.455e+13  & 9.587e+11  & 2.814e+13\\
+            $\rho$_{04} & 4.974e+12  & -5.777e+12 & 1.572e+13\\
+            $\rho$_{50} & -1.836e+12 & -4.701e+12 & 1.03e+12\\
+            $\rho$_{41} & 3.682e+12  & 1.3e+12    & 6.063e+12\\
+            $\rho$_{32} & 2.06e+12   & -9.788e+11 & 5.098e+12\\
+            $\rho$_{23} & -6.712e+12 & -9.919e+12 & -3.506e+12\\
+            $\rho$_{14} & 1.642e+12  & -9.098e+11 & 4.195e+12\\
+            $\rho$_{05} & 1.164e+12  & -1.678e+12 & 4.006e+12\\
+        \hline
+    \end{tabular}
+    \label{tab:polynomial_coefficients}
+\end{table}
+
+\subsection{Control System}
+\label{sub:control_system}
+In order to achieve robust control over the nonlinear actuators an implementation of model predictive control (MPC) was chosen to provide the control structure for the system, the outline of which can be seen in \Cref{fig:control_diagram_overview}. This control structure utilises a preview (prediction) horizon to estimate the future trajectory of the system based on the current state and a series of inputs to the system. This prediction horizon is calculated to 'p' time in the future, only requiring past knowledge of the system. However, to achieve this an estimation of the system response is required to calculate the trajectory. Since the model of the pneumatic muscles is highly nonlinear, there are four main options for solving future estimations.
+\begin{itemize}
+    \item Solve the nonlinear ODE
+    \item Offline linearisation about a single operating point
+    \item Offline linearisation about multiple operating points stored in a lookup table
+    \item Online linearisation about the current operating point
+\end{itemize}
+
+The first solution to solve the nonlinear ODE involves a large computational overhead and may not be possible in real-time, this solution would result in the best estimation of the next system state. The second and third options are less computationally intense and would guarantee a real-time solution however are both less accurate due to the finite number of linearised solutions stored and in the case of the third option can be memory heavy. The final of these solutions, and the one chosen for this project requires calculating the linearisation of the system at each sample time. This whilst being somewhat computationally expensive is minor compared to the first method, and requires little memory, whilst reducing the error to the nonlinear system.\newline
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[scale=0.15]{MPC.png}
+    \caption{MPC}
+    \label{fig:mpc_chart}
+\end{figure}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[clip, trim=2cm 4cm 4cm 4cm, width=1.00\textwidth]{BlockDiagram_Overview.pdf}
+    \caption{Control Diagram}
+    \label{fig:control_diagram_overview}
+\end{figure}
+
+As the goal of MPC is to calculate a series of predicted control inputs that reduce the error between the reference trajectory and predicted/measured output, a method of selecting a set of control inputs is required that will give rise to a new estimation. As mentioned in \Cref{subsubsection:pneumatic_control} and \Cref{tab:valve_states} the system implemented has a limited number of control actions that can be performed to produce an output. As this is the case all three modes will be used to subsequently calculate differing estimations for the predicted control input. \newline
+
+A method for calculating the predicted output trajectory given a set of predicted control inputs is the use of a preview horizon controller or optimiser. The optimiser calculates the updated states for each control input recursively solving this for some 'p' layers of future control input, this design is highlighted in \Cref{fig:control_diagram_optimiser}. As there are three inputs considered for each seed the problem has 3\textsuperscript{p} complexity growing rapidly with the increase in the prediction horizon. The function of the optimiser is to calculate the 'cost' \Cref{math:cost_function} or weighted error of performing the root seed control action to some desired setpoint and states with respect to the final inputs and states. This is calculated on the completion of each final seed within the optimiser, the cost is then sorted to determine the optimal initial control action to perform.
+
+\begin{equation}
+    J(\theta) = \sum\textbf{Q}x + \textbf{R}u
+    \label{math:cost_function}
+\end{equation}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[clip, trim=1cm 1cm 1cm 1cm, width=1.00\textwidth]{BlockDiagram_Optimiser.pdf}
+    \caption{Optimiser}
+    \label{fig:control_diagram_optimiser}
+\end{figure}
+
+\newpage
+\section{Software Architecture}
+\label{sub:software}
+
+\subsection{Overview}
+\label{sub:software_overview}
+
+The software architecture follows the structure shown in \Cref{fig:software_arch}. The system is comprised of three major subsystems, the Leg Controller, ADC, and the Joints. The first subsystem, the leg controller takes the requested leg positions via an end effector or motion command and calculates the inverse and forward kinematics to determine the angle of each joint. The second subsystem, the ADC reads in sequence each of the sensors updating the data fed into the control loop as often as possible. The third subsystem consists an instance of each joint in the system. One and two axis joints are implemented each of which contain an instance of all the muscles for that specific joint as well as a controller which takes the reference angles for the joints and drives the setpoint for each muscle. Each muscle then also contains a valve, pressure sensor and linear potentiometer associated with that muscle as well as the relevant microcontroller pins. This software structure allows all muscles to contain the same base control methods with varying parameters between them.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[clip, trim=0cm 5cm 0cm 0cm, width=1.00\textwidth]{Software_Overview.pdf}
+    \caption{Software Overview}
     \label{fig:software_arch}
 \end{figure}
 
-\clearpage
-\section{Testing and Evaluation}
-\label{sec:results}
+\subsection{Control Structure}
+\label{sub:control_structure}
 
-The initial test setup for the static map and step response consists of two muscles attached end to end mounted to a backing board. This backing board also contains a valve for each muscle and the required pneumatic hoses and fittings to provide the system pressure. Mounted between the two muscles is a linear potentiometer used to measure the position response of the step input. The valves and potentiometer are wired into the micro-controller to allow feedback of the states and positions of the devices. The system pressure has been tested to be safe up to 60 psi whilst maintaining full contraction of the pneumatic actuator.\newline
-
-Whilst attempting to perform these tests the actuators designed an implemented showed a less than desirable lifetime for inflation/deflation cycles. Three actuators failed within 10 cycles of inflation. This is expected to be due to an incompatibility between the inner bladder and the braided mesh as described in \cite{andrikopoulos_nikolakopoulos_2017}. Moving forward different bladders will be tested to determine an effective compatibility combination by varying the material, diameter and thickness of the selected bladder. The latex bladder used was found to have inconsistent tolerances in material thickness along the length of the sample, this would result in nonuniform inflation of the bladder resulting in increased pressure and stress regions of the material.
 
 \newpage
 \section{Conclusion}
@@ -360,32 +768,21 @@ Humanoid robotics is a fast-developing field encompassing a wide range of engine
 
 This project is to design and construct a single leg based on a custom developed humanoid robotic platform, focusing on the knee and ankle joints specifically. A mathematical model for the actuator will be used to inform the control system structure and allow the estimation of the current system state. The performance criteria for the actuator will be compared against two currently used dynamixel servos, the \cite{robotis_mx106} and \cite{robotis}.\newline
 
-Pneumatic air muscles are referred to by many names, these are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. As \cref{fig:pneumatic_design} shows, the construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours; these often measure pressure, axial contraction and exerted force of the actuator \cite{erin_pol_valle_park_2016}. To measure the states of the system, pressure and linear position, a pressure sensor and linear potentiometer have been chosen. The pressure sensor is placed after the valve on the muscle side of the actuator and the linear potentiometers attached to the end of each muscle. This eliminates the need to a sensor attached directly to the rotational axis. Pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Most robotic systems driven by PMAs required an underlying torque controller. This can be achieved with only a static force map leading to an accurate, high-performance controller scheme. Nevertheless, a model describing the static PMA force precisely is crucial for the accuracy of the torque controller \cite{martens_boblan_2017}. Several fundamental models for PMA have been proposed to this date aimed at describing the static characteristics of PMA, approaches include functions based on energy conservation assuming the ideal cylinder nature of the muscle. These form simplified static models considering some simple structural parameters. Pneumatic air muscles also have their own dynamics, like hysteresis, some thermodynamic effects and can even be interpreted as a mass spring damper combination \cite{martens_boblan_2017}. Models dependent on the construction parameter and air pressure have been developed providing a tensile force formula of the contractor actuator and can be modified to describe the extension force.\newline
+Pneumatic air muscles are referred to by many names, these are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. As \Cref{fig:pneumatic_design} shows, the construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours; these often measure pressure, axial contraction and exerted force of the actuator \cite{erin_pol_valle_park_2016}. To measure the states of the system, pressure and linear position, a pressure sensor and linear potentiometer have been chosen. The pressure sensor is placed after the valve on the muscle side of the actuator and the linear potentiometers attached to the end of each muscle. This eliminates the need to a sensor attached directly to the rotational axis. Pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Most robotic systems driven by PMAs required an underlying torque controller. This can be achieved with only a static force map leading to an accurate, high-performance controller scheme. Nevertheless, a model describing the static PMA force precisely is crucial for the accuracy of the torque controller \cite{martens_boblan_2017}. Several fundamental models for PMA have been proposed to this date aimed at describing the static characteristics of PMA, approaches include functions based on energy conservation assuming the ideal cylinder nature of the muscle. These form simplified static models considering some simple structural parameters. Pneumatic air muscles also have their own dynamics, like hysteresis, some thermodynamic effects and can even be interpreted as a mass spring damper combination \cite{martens_boblan_2017}. Models dependent on the construction parameter and air pressure have been developed providing a tensile force formula of the contractor actuator and can be modified to describe the extension force.\newline
 
-The ultimate goal of this design  will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \cref{fig:platform} this platform has been designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. \newline
+The ultimate goal of this design  will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \Cref{fig:platform} this platform has been designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. \newline
 
 Whilst attempting to perform these tests the actuators designed an implemented showed a less than desirable lifetime for inflation/deflation cycles. Three actuators failed within 10 cycles of inflation. This is expected to be due to an incompatibility between the inner bladder and the braided mesh as described in \cite{andrikopoulos_nikolakopoulos_2017}. Moving forward different bladders will be tested to determine an effective compatibility combination by varying the material, diameter and thickness of the selected bladder. The latex bladder used was found to have inconsistent tolerances in material thickness along the length of the sample, this would result in nonuniform inflation of the bladder resulting in increased pressure and stress regions of the material.
 
-\newpage
-\section{Further Work}
-\label{sec:further}
-The second phase of the project is outlined in \cref{sub:gantt_chart}, this involves four major stages as outlined below.
+\subsection{Multi Degree of Freedom Joint}
+\label{sub:two_dof_joint}
 
-\subsection{Static Map}
-\label{sub:static_map}
-In order to compare the performance of the muscle against the theoretical models found in \cite{martens_boblan_2017} and \cite{hosovsky_2012}, a static map of the force generated at varying pressures and contraction length will be produced. This will also inform the coefficients of the surface polynomial required for the use of the dynamic model. This test will be conducted by suspending a muscle from one end with a variable mass attached to the other end. By varying the pressure, a contraction percentage can be measured and thus the static map can be generated. This static map will be compared to the ideal theoretical static map as seen in \cref{fig:staticmap}.
+\subsection{Muscle Design}
+\label{sub:future_muscle_design}
 
-\subsection{Step Response}
-\label{sub:step_response}
-The first step to developing and evaluating a control strategy is to perform a step response of the system. This step response will form part of the performance metric for the viability of pneumatic muscle actuators for use within a humanoid robot. The step response will be conducted with a pair of muscles attached end on end and fixed to a backing plate. One muscle will begin fully contracted and the system pressure will be applied to the second. When the first muscles valve is switched, the second will contract, forming the step response curve.
+\subsection{Alternative Control Methods}
+\label{sub:alternative_control_methods}
 
-\subsection{Leg Construction}
-\label{sub:leg_construction}
-The next stage of this project will involve the construction of the knee and ankle joints as a complete system. Construction of the remaining muscles with the finalisation of the mounting hardware required to attach each component to the leg assembly. This will require estimating the length of muscle required for each muscle group to achieve the required contraction and thus angular motion of a human.
-
-\subsection{Model Control}
-\label{sub:mpc_implementation}
-The second major aspect for future work is the implementation of a model based nonlinear control scheme. This is where current research in the field has identified improvements can be made opposed to using a model independent control structure. This will build on the static and dynamic models seen in \cite{martens_boblan_2017} and \cite{hosovsky_2012} respectively. The SMC3 \cite{zhang_bone_2018} valve control method should also be used to reduce the SPS of the on/off type valves used in the system. Nonlinear control methods are still yet to be researched to determine the appropriate method for this project, however, it is expected some form of model predictive control or unscented Kalman Filter will be implemented to perform this task.
 
 \newpage
 \begin{appendices}
@@ -395,7 +792,7 @@ Approximating the volume as a cylinder, the dependency of the diameter on the le
 \begin{equation}
     D(L) = \frac{\sqrt{L_{Fibre}^2-L^2}}{n \pi}
 \end{equation}
-This then follows that \cref{math:diameterconst1} and \cref{math:diameterconst2} are only dependent on the initial conditions
+This then follows that \Cref{math:diameterconst1} and \Cref{math:diameterconst2} are only dependent on the initial conditions
 \begin{equation}
     n = \frac{L_0\tan(\Theta_0)}{\pi D_0}
     \label{math:diameterconst1}
@@ -429,7 +826,6 @@ Finally the following equation gives the positive pulling force exherted by the 
     F_{PMA}(\rho, l) = -\rho \frac{dV}{dL}+F_{PE} \frac{dD}{dL}-F_L
     \label{math:staticforcederive}
 \end{equation}
-\newpage
 
 % \subsection{Appendix B}
 % \label{sub:shield_design}
@@ -443,21 +839,8 @@ Finally the following equation gives the positive pulling force exherted by the 
 
 % \newpage
 
-\begin{landscape}
-\section{Gantt Chart}
-\label{sub:gantt_chart}
-\begin{figure}[ht]
-    \centering
-    \advance\leftskip-4cm
-    \advance\rightskip-2cm
-    \includegraphics[width=1.4\textwidth]{GanttChart-crop.pdf}
-    \caption{Future Work Timeline}
-    \label{fig:gantt_chart}
-\end{figure}
-\end{landscape}
-\newpage
-
 \section{Dynamic Force Derivation}
+This derivation is taken from \cite{hosovsky_2012} and has been condensed to the relevant equations required. \newline
 \begin{equation}
     \ddot{y} = \frac{1}{m}[F_E-F_S(k,P_m)-F_D(\dot{k},P_m)]
 \end{equation}
@@ -492,11 +875,11 @@ Finally the following equation gives the positive pulling force exherted by the 
 \begin{equation}
    \dot{V_a} = \begin{cases} 
         P_1C\sqrt{\frac{T_0}{T_1}}\sqrt{1-(\frac{\frac{P_2}{P_1}-b}{1-b})^2}, & \text{if}\ \frac{P_2}{P_1} > b\\ 
-        P_1C\sqrt{\frac{T_0}{T_1}}, & \text{if}\ \frac{P_2}{P_1} $\leq$ b \end{cases}
+        P_1C\sqrt{\frac{T_0}{T_1}}, & \text{if}\ \frac{P_2}{P_1} \leq b \end{cases}
 \end{equation}
 
 \begin{equation}
-    \frac{d}{dt}(\frac{P_aV_a}{V_m}) = P_a(\frac{\dot{V_a}V_m-\dot{V_m}V_a}{V_m^2}) = P_a\frac{\dot{V_a}}{V_m}-P_m\frac{\dot{V_m}}{V_m}
+    \dot{P_m} = P_a\frac{\dot{V_a}}{V_m}-P_m\frac{\dot{V_m}}{V_m}
 \end{equation}
 
 \begin{equation}
@@ -536,6 +919,7 @@ a, b, c, d - polynomial coefficients
 
 \newpage
 \end{appendices}
+
 % \newpage
 %%% Display the bibliography.
 \printbibliography
