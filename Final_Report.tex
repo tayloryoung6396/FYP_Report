@@ -32,6 +32,8 @@
 \usepackage{physics}
 \usepackage{pgfplots}
 
+\pgfplotsset{compat=1.15}
+
 \usepackage{minted}
 
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning}
@@ -188,27 +190,15 @@ Advanced nonlinear proportional integral differential (ANPID) controllers are an
 
 \subsubsection{Model Predictive Control}
 \label{sub:model_predictive_control}
-Model predictive control is a method for dealing with multi-variable control problems. It aims to choose a control state by solving the system state model repeatedly, with the goal of minimising the error function into the future horizon. The behaviour is based on a plant model and is highly dependant on the accuracy of this model. Model predictive control is a broader term used to cover a variety of linear and nonlinear control stuctures including Kalman and Unscented Kalman Filters.\newline
-TODO This needs more
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
-\newline % TODO Remove
+Model predictive control is a method for dealing with multi-variable control problems. It aims to choose a control state by solving the system state model repeatedly, with the goal of minimising the error function into the future horizon. The behaviour is based on a plant model and is highly dependant on the accuracy of this model. Model predictive control is a broader term used to cover a variety of linear and nonlinear control structures including Kalman and Unscented Kalman Filters.\newline
+A structure of MPC typically used in the control of highly non-linear systems utilise an optimiser. The job of the optimiser is to calculate the cost of performing a series of input variations in terms of the system error. The optimiser is run p times over the prediction horizon, forming a prediction of the output based on some predicted control input. This is performed for many differing first control inputs. The error between the reference trajectory and predicted output is than ranked to find the lowest cost. The first predicted control input of the lowest cost itteration is then used and the time updated. Typically a sample time that allows 10 to 20 samples over the rise time of the system is used. The prediction horizon should cover 20 to 30 samples over the transient response of the system. The prediction horizon show then be 10 to 20\% of the prediction horizon.\newline
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.15]{MPC.png}
+    \caption{MPC}
+    \label{fig:mpc_chart}
+\end{figure}
 
 \subsubsection{Sliding Mode Control}
 \label{sub:sliding_mode_control}
@@ -385,13 +375,13 @@ The conclusion of this experiment is that compatibility of muscles means the dia
     \centering
     \begin{subfigure}[t]{0.45 \textwidth}
         \centering
-        \includegraphics[scale=0.1]{MuscleRinging.png}
+        \includegraphics[height=10cm, trim={0cm 60cm 0cm 0cm},clip]{MuscleRinging.png}
         \caption{Muscle Ringing}
         \label{fig:incompatible_rings}
     \end{subfigure}
     \begin{subfigure}[t]{0.45 \textwidth}
         \centering
-        \includegraphics[scale=0.1]{MuscleBananaing.png}
+        \includegraphics[height=10cm, clip]{MuscleBananaing.png}
         \caption{Muscle Bananaing}
         \label{fig:incompatible_banana}
     \end{subfigure}
@@ -513,21 +503,20 @@ To measure the states of the system, pressure, linear position and velocity, a p
 
 \begin{figure}[!hbt]
     \centering
-    \centering
     \begin{subfigure}[t]{0.45 \textwidth}
         \centering
         \includegraphics[angle=270, origin=c, clip, trim=0cm 0cm 0cm 0cm, width=1.00\textwidth]{PressureSensorPCB.pdf}
         \caption{Pressure Sensor PCB}
-        \label{fig:pres_sense}
+        \label{fig:pres_sense_pcb}
     \end{subfigure}
     \begin{subfigure}[t]{0.45 \textwidth}
         \centering
         \includegraphics[angle=270, origin=c, clip, trim=0cm 0cm 0cm 0cm, width=1.00\textwidth]{PressureSensorSCH_crop.pdf}
         \caption{Pressure Sensor Schematic}
-        \label{fig:pres_sense}
+        \label{fig:pres_sense_sch}
     \end{subfigure}
     \caption{Pressure Sensor PCB}
-    \label{fig:incompatible_muscles}
+    \label{fig:pres_sense}
 \end{figure}
 
 \subsubsection{Microcontroller}
@@ -652,7 +641,7 @@ From these assumptions the model \Cref{math:dynamicforce2} above can be altered 
     \label{fig:doublemassspringdamper}
 \end{figure}
 
-To make calculating the system equations more manageable a state space representation \Cref{math:state_space_representation} of the second order ODE can be calculated using the states in \Cref{math:state_space_matrix}, resulting in the following set of equations. These equations don't strictly contain any input or output variables and thus reduce to only a single $\boldsymbol{A}$ matrix. All symbols present in the $\boldsymbol{A}$ matrix are taken directly from \Cref{math:dynamicforce2} and are then modified to represent the first or second muscles. A complete list of symbols can be found in \label{sub:Amatderive}.\newline
+To make calculating the system equations more manageable a state space representation \Cref{math:state_space_representation} of the second order ODE can be calculated using the states in \Cref{math:state_space_matrix}, resulting in the following set of equations. These equations don't strictly contain any input or output variables and thus reduce to only a single $\boldsymbol{A}$ matrix. All symbols present in the $\boldsymbol{A}$ matrix are taken directly from \Cref{math:dynamicforce2} and are then modified to represent the first or second muscles. A complete list of symbols can be found in \Cref{sub:Amatderive}.\newline
 
 \begin{align}
     \label{math:state_space_representation}
@@ -818,13 +807,6 @@ The first solution to solve the nonlinear ODE involves a large computational ove
 
 \begin{figure}[!hbt]
     \centering
-    \includegraphics[scale=0.15]{MPC.png}
-    \caption{MPC}
-    \label{fig:mpc_chart}
-\end{figure}
-
-\begin{figure}[!hbt]
-    \centering
     \includegraphics[clip, trim=2cm 4cm 4cm 4cm, width=1.00\textwidth]{BlockDiagram_Overview.pdf}
     \caption{Control Diagram}
     \label{fig:control_diagram_overview}
@@ -859,40 +841,57 @@ The design of the software architecture follows the structure shown in \Cref{fig
 
 \begin{figure}[!hbt]
     \centering
-    \includegraphics[clip, trim=0cm 5cm 0cm 0cm, width=1.00\textwidth]{Software_Overview.pdf}
+    \includegraphics[clip, trim=0cm 0cm 0cm 0cm, width=1.00\textwidth]{Software.pdf}
     \caption{Software Overview}
     \label{fig:software_arch}
 \end{figure}
 
 \subsection{Control Structure}
 \label{sub:control_structure}
-As this project has a major focus on the framework behind an embedded systems controller, the software architecture has a strong fixation on the modularity of the subsystems. Each item in \Cref{fig:software_arch} forms an individual class open to a multitude of applications. As mention in \Cref{sub:software_overview} each joint class constructs any and all muscles required for that joint, this allows any muscle instance to be used by a joint simply by changing the specific instance the joint is constructed with.
+As this project has a major focus on the framework behind an embedded systems controller, the software architecture has a strong fixation on the modularity of the subsystems. Each item in \Cref{fig:software_arch} forms an individual class open to a multitude of applications. As mention in \Cref{sub:software_overview} each joint class constructs any and all muscles required for that joint, this allows any muscle instance to be used by a joint simply by changing the specific instance the joint is constructed with. The controller used can also be changed between instances through the templated axis class and overloaded constructors. This allows for both optimiser driven controllers or more traditional controllers to be utilised. 
+
 \begin{listing}
 \begin{minted}{c++}
-module::HardwareIO::joint::OneAxis one_axis_joint(
-    muscles, 
-    1, 
-    0.47, 
-    module::MPC::AdaptiveMPC::mpc, 
-    module::MPC::AdaptiveMPC::optimizer1
-);
+module::HardwareIO::joint::OneAxis<module::MPC::AdaptiveMPC::AdaptiveMPC> 
+    one_axis_joint(
+        muscles, 
+        1, 
+        0.47, 
+        module::MPC::AdaptiveMPC::mpc, 
+        module::MPC::AdaptiveMPC::optimizer1
+    );
+
+module::HardwareIO::joint::OneAxis<module::SMC::SMC> 
+    one_axis_joint(
+        muscles, 
+        1, 
+        0.47,
+        module::SMC::smc
+    );
 \end{minted}
 \begin{minted}{c++}
+template <typename T>
 class OneAxis {
 public:
     OneAxis(std::vector<module::HardwareIO::muscle_t>& muscle,
             float mass,
             float radius,
-            module::MPC::AdaptiveMPC::AdaptiveMPC mpc,
-            module::MPC::AdaptiveMPC::Optimizer optimizer);
+            T controller,
+            module::MPC::AdaptiveMPC::Optimizer optimizer)
+        : muscle1(muscle[0]), muscle2(muscle[1]), controller(optimizer) {
+    }
 
-    void Compute(float angle);
-    void UpdateVelocity();
-
+    OneAxis(std::vector<module::HardwareIO::muscle_t>& muscle, 
+            float mass, 
+            float radius, 
+            T controller)
+        : muscle1(muscle[0]), muscle2(muscle[1]), controller(controller) {
+    }
+    
 private:
     module::HardwareIO::Muscle muscle1;
     module::HardwareIO::Muscle muscle2;
-    module::MPC::AdaptiveMPC::AdaptiveMPC mpc;
+    T controller;
     axis_model_t axis_model;
 };
 \end{minted}
@@ -900,7 +899,7 @@ private:
 
 \subsection{Optimiser Performance}
 \label{sub:optimiser_performance}
-To evaluate the feasibility of running the control structure and MPC on the embedded system a series of tests were performed, utilising different compiler code optimisations to determine whether the microcontroller would be capable of running the control structure. Tests were performed using the Debug, Release and MinSizeRel cmake build types over a range of optimiser layer depths. \Cref{fig:optimiser_process_time} shows the three build flags average process time, in milliseconds, for a single prediction horizon, vs the number of layers in the optimiser. These tests were performed over 1000 iterations to ensure any processor caching was observed. Also plotted is the sampling time floor $T_s$ as the minimum process time for a new sample of data. %TODO Reword this
+To evaluate the feasibility of running the control structure and MPC on the embedded system a series of tests were performed. By utilising different compiler optimisations to determine whether the microcontroller would be capable of running the control structure. Tests were performed using the Debug, Release and MinSizeRel cmake build types over a range of optimiser layer depths. \Cref{fig:optimiser_process_time} shows the three build flags average process time in milliseconds. Plotted for a single prediction horizon, vs the number of layers in the optimiser. These tests were performed over 1000 iterations to ensure any processor caching was observed. Also plotted is the sampling time floor $T_s$ as the minimum process time for a new sample of data. \newline
 As a result of these performance tests, to achieve a process time approximately equal to the sampling time of the system, the code should be compiled as Release with a maximum of 5 layers. This in turn implies a prediction horizon of 250 ms given a sampling time of 50 ms.
 
 \begin{figure}[hbt!]
@@ -1120,7 +1119,7 @@ The schematic for the electronics shield used to interface the potentiometers, p
 The partial differential of each state function with respect to each state then forms the final $\boldsymbol{A}$ matrix \Cref{math:A_matrix}.
 TODO Finish this
 \begin{align}
-    \alpha_{10} = \fdv{F_2}{z_1} &= \frac{1}{m}\left[dk_{CE2}F_{CE2}P_{CE2}-dk_{CE1}F_{CE1}P_{CE1}\right]
+    \alpha_{10} = \fdv{F_2}{z_1} &= \frac{1}{m}\left[-dk_{CE2}F_{CE2}P_{CE2}-dk_{CE1}F_{CE1}P_{CE1}\right]
     \label{math:alpha_10_matrix}\\
     \text{where}\nonumber\\
     %
@@ -1132,21 +1131,21 @@ TODO Finish this
     \begin{bmatrix}
              p_{00} & p_{01} & p_{02} & p_{03} & p_{04} & p_{05}\\
              p_{10} & p_{11} & p_{12} & p_{13} & p_{14} & 0\\
-             p_{20} & p_{21} & p_{22} & p_{23} & 0 &   0\\
-             p_{30} & p_{31} & p_{32} & 0 &   0 &   0\\
-             p_{40} & p_{41} & 0 &   0 &   0 &   0\\
-             p_{50} & 0 &   0 &   0 &   0 &   0
+             p_{20} & p_{21} & p_{22} & p_{23} & 0      & 0\\
+             p_{30} & p_{31} & p_{32} & 0      & 0      & 0\\
+             p_{40} & p_{41} & 0      & 0      & 0      & 0\\
+             p_{50} & 0      & 0      & 0      & 0      & 0
     \end{bmatrix}\nonumber\\
     P_{CE} &= 
     \begin{bmatrix}
-    1 & P_m & P_m^2 & P_m^3 & P_m^4 & P_m^5
+        1 & P_m & P_m^2 & P_m^3 & P_m^4 & P_m^5
     \end{bmatrix}^T\nonumber\\
     k_1 &= k_{01} + y/L_{01}\nonumber\\
     k_2 &= k_{02} - y/L_{02}\nonumber
 \end{align}
 
 \begin{align}
-    \alpha_{11} = \fdv{F_2}{z_2} &= \frac{1}{m}(-F_{D1} + F_{D2})
+    \alpha_{11} = \fdv{F_2}{z_2} &= \frac{1}{m}(-F_{D1} - F_{D2})
     \label{math:alpha_11_matrix}\\
     \text{where}\nonumber\\
     %
@@ -1171,20 +1170,20 @@ TODO Finish this
     \begin{bmatrix}
              p_{00} & p_{01} & p_{02} & p_{03} & p_{04} & p_{05}\\
              p_{10} & p_{11} & p_{12} & p_{13} & p_{14} & 0\\
-             p_{20} & p_{21} & p_{22} & p_{23} & 0 &   0\\
-             p_{30} & p_{31} & p_{32} & 0 &   0 &   0\\
-             p_{40} & p_{41} & 0 &   0 &   0 &   0\\
-             p_{50} & 0 &   0 &   0 &   0 &   0
+             p_{20} & p_{21} & p_{22} & p_{23} & 0      & 0\\
+             p_{30} & p_{31} & p_{32} & 0      & 0      & 0\\
+             p_{40} & p_{41} & 0      & 0      & 0      & 0\\
+             p_{50} & 0      & 0      & 0      & 0      & 0
     \end{bmatrix}\nonumber\\
     dP_{CE1} &= 
     \begin{bmatrix}
-    0 & 1 & 2P_{m1} & 3P_{m1}^2 & 4P_{m1}^3 & 5P_{m1}^4
+        0 & 1 & 2P_{m1} & 3P_{m1}^2 & 4P_{m1}^3 & 5P_{m1}^4
     \end{bmatrix}^T\nonumber\\
     k_1 &= k_{01} + y/L_{01}\nonumber
 \end{align}
 
 \begin{align}
-    \alpha_{13} = \fdv{F_2}{z_4} &= \frac{1}{m}(F_{S2} + F_{D2})
+    \alpha_{13} = \fdv{F_2}{z_4} &= \frac{1}{m}(-F_{S2} - F_{D2})
     \label{math:alpha_13_matrix}\\
     \text{where}\nonumber\\
     %
@@ -1206,7 +1205,7 @@ TODO Finish this
     \end{bmatrix}\nonumber\\
     dP_{CE2} &= 
     \begin{bmatrix}
-    0 & 1 & 2P_{m2} & 3P_{m2}^2 & 4P_{m2}^3 & 5P_{m2}^4
+        0 & 1 & 2P_{m2} & 3P_{m2}^2 & 4P_{m2}^3 & 5P_{m2}^4
     \end{bmatrix}^T\nonumber\\
     k_{2} &= k_{02} + y/L_{02}\nonumber
 \end{align}
