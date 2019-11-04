@@ -127,26 +127,25 @@ Specifically the work to be undertaken within this stage of the project comprise
 \subsection{Outline}
 \label{sub:outline}
 
-This report has been organised into four major sections, related work, system implementation and electronics, software architecture, and modelling and control.
+This report has been organised into five major sections, related work, system implementation and electronics, modelling and control, software architecture, and simulated system.
 
 \begin{enumerate}
-\item \textbf{Related Work} The current research relevant to the specified project is broken into three major areas. The design and construction of functioning pneumatic muscles, control methods used to control linear and non linear systems, and methods of modelling static and dynamic systems. The construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder. At one end, the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. A muscle model can be divided into two main parts, mechanical and pneumatic, a model can be described in terms of its static relationships between forces using methods such as finite element analysis or virtual work relationships \Cref{sub:staticforcederive}. These models can be extended by considering more complex dynamic characteristics of the system.
+\item \textbf{Related Work} The current research relevant to the specified project is broken into three major areas. The design and construction of functioning pneumatic muscles, control methods used to control linear and non linear systems, and methods of modelling static and dynamic systems.
 
 \item \textbf{System Implementation and Electronics}
-TODO
-\clearpage % TODO Remove
-\item \textbf{Software Architecture}
-TODO
+The system implementation covers a leg platform design, as well as a 1 DoF test rig design and construction. Muscle design and Pneumatic control are covered following the electronics used within the test rig system.
 
 \item \textbf{Modelling and Control}
-TODO
+This section covers modelling and control of the pneumatic muscles, with experimental results of the static modelling. It contains a detailed overview of the control structure.
+
+\item \textbf{Software Architecture}
+An overview of the software architecture with a breakdown of the modularity of the code base is covered in this section. The control structure performance is also analysed.
+
+\item \textbf{Simulated System}
+This section covers the implementation of a simulated plant to access controller performance.
 
 \item \textbf{Conclusion} 
-TODO
-\clearpage % TODO Remove
 
-\item \textbf{Further Work}
-TODO
 \end{enumerate}
 
 \clearpage
@@ -161,7 +160,7 @@ Pneumatic air muscles have many names fluidic muscle, pneumatic muscle actuator,
 
 Pneumatic muscles are analogous to the "biological motor" for locomotion or manipulation with advantages like the passive damping, good power to weight ratio, low maintenance, low price and usage in rough environments \cite{ranjan_upadhyay_kumar_dhyani_2012}. They are ideal for use in human environments in applications of human interaction such as rehabilitation therapy, nursing elderly people, and day to day work support for elderly people \cite{saga_nagase_saikawa_2006}. Compared to traditional actuators in the form of electric servos, pneumatic muscles are highly nonlinear requiring complex controllers to perform precise movements. \newline
 
-TODO Make this picture a picture of mine with better labels
+% TODO Make this picture a picture of mine with better labels
 \begin{figure}[ht!]
     \centering
     \includegraphics[scale=0.6]{Pneumatic-Muscle-Actuator-Design.png}
@@ -365,10 +364,8 @@ The following section describes the pneumatic muscle design and construction wit
 \label{subsubsection:muscle_design}
 The pneumatic muscles are constructed from two major components, the inner airtight bladder and the outer braided mesh. As these two components must be chosen to be 'compatible' with each other, a series of experimental trials were performed to determine suitable components. A combination of two bladder materials, each with two diameters was trailed against two braid diameters. The bladder materials selected were a natural latex and a silicone tube. The two bladder diameters selected were 6 mm ID, 9 mm OD and 10 mm ID, 14 mm OD. As for the braid, diameters of 20 and 40 mm were tested. This selection of components was selected due to the availability of products and cost. A variety of muscles were constructed and tested for load lifting capability and reliability. After repeated tests it was found that the selection of bladder and braids were incompatible. This incompatibility was evident in the non-uniform expansion of the bladder, resulting in decompression of the muscle bladder. \newline
 
-A final bladder material and diameter was experimentally trailed with the original two braids. An 18 mm ID, 22 mm OD road bike tube was used to construct a 280 mm length muscle. The muscle utilising the larger diameter braid failed longitudinally along the bladder, whilst the smaller braid successfully performed in repeated trials. This muscle was capable of lifting up to 12 kg whilst maintaining full contraction.\newline
+A final bladder material and diameter was experimentally trailed with the original two braids. An 18 mm ID, 22 mm OD road bike tube was used to construct a 280 mm length muscle. The muscle utilising the larger diameter braid failed longitudinally along the bladder, whilst the smaller braid successfully performed in repeated trials. This muscle was capable of lifting up to 16 kg whilst maintaining full contraction.\newline
 The conclusion of this experiment is that compatibility of muscles means the diameters of the two components should be as close as possible. As the difference between the diameter of the bladder and the braid increases, the inflation of the muscle can become irregular. This can cause uneven stresses and pressures on the inside of the bladder leading to premature failure. Failure can occur in one of two ways. The bladder can form 'rings' \Cref{fig:incompatible_rings} around the circumference of the material, this non-uniform expansion results in increased pressure on parts of the bladder causing failure. The second failure occurs when the non-uniform expansion occurs laterally down the bladder. \Cref{fig:incompatible_banana} shows the 'banana' shape when one side of the braid contracts prematurely which can also result in failure. Both of these failures were seen in testing when the resting diameters of the two components differed by more than $30\%$ as seen in \Cref{fig:incompatible_muscles}.
-
-
 
 \begin{figure}[!hbt]
     \centering
@@ -790,8 +787,21 @@ F_{S}(k,P_m) =
     \label{tab:polynomial_coefficients}
 \end{table}
 
-To verify the accuracy of the calculated static map, an experiment was conducted by varying the pressure and mass attached to a static muscle. Varying the pressure from 0 to 60 psi, and mass from XXXX to XXXX kg. From this the length of the muscle can be measured and an experimental surface formed. \Cref{fig:experimental_static_surface} shows the produced static map and \Cref{fig:error_static_surface} the error deviation from the calculated static map.
-% TODO Do static map from data, take the error, report the difference between the model and the data
+To verify the accuracy of the calculated static map, an experiment was conducted by varying the pressure and mass attached to a static muscle. Varying the pressure from 0 to 60 psi, and mass from 1.5 to 16 kg. From this the length of the muscle can be measured and a static response plot formed. \Cref{fig:static_response_latex} shows the calculated and experimental static responses for varying masses for a muscle with a latex bladder. \Cref{fig:static_response_bike} shows the calculated and experimental static responses for varying masses for a muscle with a bike tube bladder.
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=1]{staticmap.eps}
+    \caption{Static Response Latex Bladder}
+    \label{fig:static_response_latex}
+\end{figure}
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=1]{staticmap.eps}
+    \caption{Static Response Bike Tube Bladder}
+    \label{fig:static_response_bike}
+\end{figure}
 
 \subsection{Control System}
 \label{sub:control_system}
@@ -814,9 +824,8 @@ The first solution to solve the nonlinear ODE involves a large computational ove
 
 As the goal of MPC is to calculate a series of predicted control inputs that reduce the error between the reference trajectory and predicted/measured output, a method of selecting a set of control inputs is required that will give rise to a new estimation. As mentioned in \Cref{subsubsection:pneumatic_control} and \Cref{tab:valve_states} the system implemented has a limited number of control actions that can be performed to produce an output. As this is the case all three modes will be used to subsequently calculate differing estimations for the predicted control input. \newline
 
-A method for calculating the predicted output trajectory given a set of predicted control inputs, is with the use of a preview horizon controller or optimiser. The optimiser calculates the updated states for each control input recursively solving this for some 'p' layers of future control input, this design is highlighted in \Cref{fig:control_diagram_optimiser}. As there are three inputs considered for each seed the problem has 3\textsuperscript{p} complexity growing rapidly with the increase in the prediction horizon. The function of the optimiser is to calculate the 'cost' \Cref{math:cost_function} or weighted error of performing the root seed control action to some desired setpoint and states with respect to the final inputs and states. This is calculated on the completion of each final seed within the optimiser, the cost is then sorted to determine the optimal initial control action to perform.
+A method for calculating the predicted output trajectory given a set of predicted control inputs, is with the use of a preview horizon controller or optimiser. The optimiser calculates the updated states for each control input recursively solving this for some 'p' layers of future control input, this design is highlighted in \Cref{fig:control_diagram_optimiser}. As there are three inputs considered for each seed the problem has 3\textsuperscript{p} complexity growing rapidly with the increase in the prediction horizon. The function of the optimiser is to calculate the 'cost' \Cref{math:cost_function} or weighted error of performing the root seed control action to some desired setpoint and states with respect to the final inputs and states. This is calculated on the completion of each final seed within the optimiser, the cost is then sorted to determine the optimal initial control action to perform. A linear quadratic cost function is used due to the linear constraints of the system.
 
-% TODO Fix this cost function
 \begin{equation}
     J = \sum_{k=0}^{T_s} x\left[k\right]^T\textbf{Q}x\left[k\right] + u\left[k\right]^T\textbf{R}u\left[k\right]
     \label{math:cost_function}
@@ -949,31 +958,73 @@ As a result of these performance tests, to achieve a process time approximately 
 \end{figure}
 
 
+\clearpage
+\section{Simulated System}
+\label{sub:simulated_system}
+% TODO Talk about the reason for the simulation \newline
+To analyse the performance of the controllers implemented without running on the test rig, a simulated hardware module was created. This module is based on the \cite{hosovsky_2012} model used in the MPC controller. Simulated sensors have been implemented with some added Gaussian measurement noise. The simulated plant is used to test the controllers before experimental tests are performed.
+
+\subsection{Overview}
+\label{sub:simulation_overview}
+TODO Method of implementation\newline
+
+
+\subsection{Simulation Results}
+\label{sub:simulation_results}
+Figures \Cref{fig:simulated_pid}, \Cref{fig:simulated_smc} and \Cref{fig:simulated_mpc} show the simulated responses to a reference input. These simulations were run with three controllers to compare the feasibility and tracking error of each. An implementation of PID, SMC and MPC have been compared with their tracking error on \Cref{fig:controller_tracking_error}.
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.8]{staticmap.eps}
+    \caption{Simulated PID controller}
+    \label{fig:simulated_pid}
+\end{figure}
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.8]{staticmap.eps}
+    \caption{Simulated SMC controller}
+    \label{fig:simulated_smc}
+\end{figure}
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.8]{staticmap.eps}
+    \caption{Simulated MPC controller}
+    \label{fig:simulated_mpc}
+\end{figure}
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.8]{staticmap.eps}
+    \caption{Simulated controller tracking error comparison}
+    \label{fig:controller_tracking_error}
+\end{figure}
 
 \clearpage
 \section{Conclusion}
 \label{sec:conclusion}
-TODO Write new conclusion
+The goal of this design  will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \Cref{fig:platform} this platform has been designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. \newline
 
-Humanoid robotics is a fast-developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general intelligence. Robocup \cite{kitano1995robocup}, is just one example of a competition utilising a simple soccer game as the platform for the research and development of humanoid robots. Robotics requires three major areas of research one of which, locomotion, allows the robot to move about the world to some desired location determined by the behaviour system. In order to perform this task, the robot needs some method of actuating joints in a controllable, fast and energy efficient way. Currently, actuators used by different humanoid league teams are limited to two main products, dynamixel servos \cite{robotis_mx106} or custom designed servo motors. These are both expensive and are limited in the speed and torque which can be output from the actuator. Major leaders in the field of humanoid robotics and robotics mostly use hydraulics \cite{atlas}, this allows them to carry larger payloads and run for longer periods of time. However, this also has it's trade offs increasing the weight of the platform and the speed in which it can move. \newline
+Whilst testing actuator designs, a less than desirable lifetime for inflation/deflation cycles was observed. Three actuators failed within 10 cycles of inflation. This was due to an incompatibility between the inner bladder and the braided mesh as described in \cite{andrikopoulos_nikolakopoulos_2017}. The latex bladder used was found to have inconsistent tolerances in material thickness along the length of the sample, this resulted in nonuniform inflation of the bladder resulting in increased pressure and stress regions of the material. A more compatible set of components were discovered, with closer diameters between the bladder and braid. This consisted of an 18mm road bike tube with the previously used 20mm braid. This new pneumatic muscle was capable of lifting 16 kg under full contraction.\newline
 
-This project is to design and construct a single leg based on a custom developed humanoid robotic platform, focusing on the knee and ankle joints specifically. A mathematical model for the actuator will be used to inform the control system structure and allow the estimation of the current system state. The performance criteria for the actuator will be compared against two currently used dynamixel servos, the \cite{robotis_mx106} and \cite{robotis}.\newline
+\newline TODO Write about optimiser result
+\newline TODO Write about static map
 
-Pneumatic air muscles are referred to by many names, these are often shortened to PAM (pneumatic air muscle) or PMA (pneumatic muscle actuator) and are used interchangeably throughout research. As \Cref{fig:pneumatic_design} shows, the construction of pneumatic muscles consist of an outer braided mesh and inner rubber or latex bladder, at one end the bladder has an air tight seal with the braided mesh fixed in place and at the other it contains an inlet for the compressed air. PAM typically require external sensing mechanisms due to their nonlinear behaviours; these often measure pressure, axial contraction and exerted force of the actuator \cite{erin_pol_valle_park_2016}. To measure the states of the system, pressure and linear position, a pressure sensor and linear potentiometer have been chosen. The pressure sensor is placed after the valve on the muscle side of the actuator and the linear potentiometers attached to the end of each muscle. This eliminates the need to a sensor attached directly to the rotational axis. Pneumatic muscles are a highly nonlinear actuator, this means that standard linear controllers have limited success in controlling the actuator position. Most robotic systems driven by PMAs required an underlying torque controller. This can be achieved with only a static force map leading to an accurate, high-performance controller scheme. Nevertheless, a model describing the static PMA force precisely is crucial for the accuracy of the torque controller \cite{martens_boblan_2017}. Several fundamental models for PMA have been proposed to this date aimed at describing the static characteristics of PMA, approaches include functions based on energy conservation assuming the ideal cylinder nature of the muscle. These form simplified static models considering some simple structural parameters. Pneumatic air muscles also have their own dynamics, like hysteresis, some thermodynamic effects and can even be interpreted as a mass spring damper combination \cite{martens_boblan_2017}. Models dependent on the construction parameter and air pressure have been developed providing a tensile force formula of the contractor actuator and can be modified to describe the extension force.\newline
-
-The ultimate goal of this design  will be to develop a humanoid robotic platform designed to replicate the motions of a human closer than the current electric servo driven humanoid robots. To achieve this goal an alternate actuator must be developed, and a platform feasibility study performed to determine the viability of the actuator developed. Shown in \Cref{fig:platform} this platform has been designed to mimic the range of joint movements capable by a human, this biologically inspired platform is formed around the skeleton dimensions of an adult human, implementing muscle groups to control the joints for each degree of freedom. \newline
-
-Whilst attempting to perform these tests the actuators designed an implemented showed a less than desirable lifetime for inflation/deflation cycles. Three actuators failed within 10 cycles of inflation. This is expected to be due to an incompatibility between the inner bladder and the braided mesh as described in \cite{andrikopoulos_nikolakopoulos_2017}. Moving forward different bladders will be tested to determine an effective compatibility combination by varying the material, diameter and thickness of the selected bladder. The latex bladder used was found to have inconsistent tolerances in material thickness along the length of the sample, this would result in nonuniform inflation of the bladder resulting in increased pressure and stress regions of the material.
-
-\subsection{Multi Degree of Freedom Joint}
+\subsection{Single Degree of Freedom Joint}
 \label{sub:two_dof_joint}
 TODO
 
-\subsection{Muscle Design}
+\subsection{Project Extensions}
+\label{sub:project_extensions}
+TODO
+
+\subsubsection{Multi Degree of Freedom Joint}
+\label{sub:two_dof_joint}
+TODO
+
+\subsubsection{Muscle Design}
 \label{sub:future_muscle_design}
 TODO
 
-\subsection{Alternative Control Methods}
+\subsubsection{Alternative Control Methods}
 \label{sub:alternative_control_methods}
 TODO
 
