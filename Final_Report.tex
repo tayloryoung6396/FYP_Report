@@ -787,18 +787,27 @@ F_{S}(k,P_m) =
     \label{tab:polynomial_coefficients}
 \end{table}
 
-To verify the accuracy of the calculated static map, an experiment was conducted by varying the pressure and mass attached to a static muscle. Varying the pressure from 0 to 60 psi, and mass from 1.5 to 16 kg. From this the length of the muscle can be measured and a static response plot formed. \Cref{fig:static_response_latex} shows the calculated and experimental static responses for varying masses for a muscle with a latex bladder. \Cref{fig:static_response_bike} shows the calculated and experimental static responses for varying masses for a muscle with a bike tube bladder.
+To verify the accuracy of the calculated static map, an experiment was conducted by varying the pressure and mass attached to a static muscle. Varying the pressure from 0 to 60 psi, and mass from 1.5 to 16 kg. From this the length of the muscle can be measured and a static response plot formed. \Cref{fig:static_response_ideal} shows the ideal static response curve of the pneumatic muscles.
+\Cref{fig:static_response_latex} shows the experimental static responses for varying masses for a muscle with a latex bladder. \Cref{fig:static_response_bike} shows the experimental static responses for varying masses for a muscle with a bike tube bladder. \newline 
+The ideal model does not fit the experimental results closely. For the latex bladder the experimental data contains inaccuracy in the measurement of the pressure within the muscle. This is seen in the overlapping force curves of the plot. The model does not capture the behaviour at low pressures. The bike tube bladder the results closer represent the ideal model. Again, the model does not capture the behaviour at low pressures. For this experiment an artefact can be seen in the 0 to 10 psi range of the 1.5 kg test. This artefact is a result of the muscle extending prior to contracting under the pressure. The minimum weight required to fully extend the muscle under 0 psi was not achieved.
 
 \begin{figure}[!hbt]
     \centering
-    \includegraphics[scale=1]{staticmap.eps}
+    \includegraphics[scale=0.8]{IdealModel.eps}
+    \caption{Ideal Static Response}
+    \label{fig:static_response_ideal}
+\end{figure}
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[scale=0.8]{latex.eps}
     \caption{Static Response Latex Bladder}
     \label{fig:static_response_latex}
 \end{figure}
 
 \begin{figure}[!hbt]
     \centering
-    \includegraphics[scale=1]{staticmap.eps}
+    \includegraphics[scale=0.8]{BikeTube.eps}
     \caption{Static Response Bike Tube Bladder}
     \label{fig:static_response_bike}
 \end{figure}
@@ -961,13 +970,7 @@ As a result of these performance tests, to achieve a process time approximately 
 \clearpage
 \section{Simulated System}
 \label{sub:simulated_system}
-% TODO Talk about the reason for the simulation \newline
-To analyse the performance of the controllers implemented without running on the test rig, a simulated hardware module was created. This module is based on the \cite{hosovsky_2012} model used in the MPC controller. Simulated sensors have been implemented with some added Gaussian measurement noise. The simulated plant is used to test the controllers before experimental tests are performed.
-
-\subsection{Overview}
-\label{sub:simulation_overview}
-TODO Method of implementation\newline
-
+To analyse the performance of the controllers, a simulated hardware module was created. This module is based on the \cite{hosovsky_2012} model used in the MPC controller. Simulated sensors have been implemented with some added Gaussian measurement noise. The simulated plant is used to test the controllers before experimental tests are performed.
 
 \subsection{Simulation Results}
 \label{sub:simulation_results}
@@ -1005,28 +1008,30 @@ The goal of this design  will be to develop a humanoid robotic platform designed
 
 Whilst testing actuator designs, a less than desirable lifetime for inflation/deflation cycles was observed. Three actuators failed within 10 cycles of inflation. This was due to an incompatibility between the inner bladder and the braided mesh as described in \cite{andrikopoulos_nikolakopoulos_2017}. The latex bladder used was found to have inconsistent tolerances in material thickness along the length of the sample, this resulted in nonuniform inflation of the bladder resulting in increased pressure and stress regions of the material. A more compatible set of components were discovered, with closer diameters between the bladder and braid. This consisted of an 18mm road bike tube with the previously used 20mm braid. This new pneumatic muscle was capable of lifting 16 kg under full contraction.\newline
 
-\newline TODO Write about optimiser result
-\newline TODO Write about static map
+As part of the system feasibility evaluation, the microcontroller chosen was evaluated for it's processing capability. This processor was found to be adequate for initial testing, however, for prolonged use or a more complex model, a faster processor would be required.
+A smaller sampling time could be achieved if a faster processor was used, this in turn would increase the accuracy of the predictions.\newline
+
+The static model of the two muscle constructions tested were found to not accurately represent the experimental results. This further shows the need for a more defined model for the system to behave more predictably.
 
 \subsection{Single Degree of Freedom Joint}
 \label{sub:two_dof_joint}
-TODO
+Further work on the project will focus on finalising the test rig implementation. This will aim to gather experimental results from the physical system. To achieve this some physical components of the system need to be tested.
 
 \subsection{Project Extensions}
 \label{sub:project_extensions}
-TODO
+Featured below are further extensions for future projects. These should focus on the refinement of current works. This project should provide the foundation for many extensions focusing on a variety of aspects.
 
 \subsubsection{Multi Degree of Freedom Joint}
 \label{sub:two_dof_joint}
-TODO
+The development of a multiple degree of freedom joint can be designed based on the foundation of the project. Reworking the model to include a second axis and set of control surfaces.
 
 \subsubsection{Muscle Design}
 \label{sub:future_muscle_design}
-TODO
+Further research and development could be focused on the design of the pneumatic air muscles. These could be compared to commercially available pneumatic air muscles. The performance, durability and cost could be utilised in the overall feasibility of the project.
 
 \subsubsection{Alternative Control Methods}
 \label{sub:alternative_control_methods}
-TODO
+Additionally, alternative control methods could be researched, improving the performance of the system. This could include model refinement if a model reliant control strategy was implemented. 
 
 
 \clearpage
