@@ -112,7 +112,7 @@
 \label{sub:motivation}
 
 
-Humanoid robotics is a fast-developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general artificial intelligence. Robocup \cite{kitano1995robocup}, is just one example of a competition utilising a simple concept, a soccer game, as the platform for the research and development of humanoid robots. Robocup involves teams of humanoid robots attempting to play a game of soccer on a scaled soccer field. Whilst this may seem trivial, in order to play soccer, you need the ability to perform three major tasks. These three tasks consist of vision, localisation, and locomotion. Vision is used to locate objects in the world, balls, goals, field lines and obstacles. This system provides the majority of the information input into the system which is then used to determine the various behaviours and actions to take. Localisation is responsible for determining whether the information is correct and consistent with the previous input data, filtering this information into what the robot perceives as the current world state. The last major system, locomotion, then allows the robot to move about the world to some desired location determined by the behaviour system. In order to perform this task, the robot needs some method of actuating joints in a controllable, fast and energy efficient way. Currently, actuators used by different humanoid league teams are limited to two main products, dynamixel servos \cite{robotis_mx106} or custom designed servo motors. These are both expensive and are limited in the speed and torque which can be output from the actuator. Both of these methods use electrical energy as the main energy system, storing this within Li-Po batteries and converting to a rotating shaft via a motor and gearbox. However, major leaders in the field of humanoid robotics and robotics in general outside of this competition use hydraulics \cite{atlas}, this allows them to carry larger payloads and run for longer periods of time. However, this also has it's trade offs increasing the weight of the platform and the speed in which it can move. \newline
+Humanoid robotics is a fast-developing field encompassing a wide range of engineering disciplines to solve the challenges of robotics interaction in an environment designed for humans. In order to encourage this development many competitions exist around very common but highly specific human tasks, all of which aim to extend the field of humanoid robotics and general artificial intelligence. Robocup \cite{kitano1995robocup}, is just one example of a competition utilising a simple concept, a soccer game, as the platform for the research and development of humanoid robots. Robocup involves teams of humanoid robots attempting to play a game of soccer on a scaled soccer field. Whilst this may seem trivial, in order to play soccer, you need the ability to perform three major tasks. These three tasks consist of vision, localisation, and locomotion. Vision is used to locate objects in the world, balls, goals, field lines and obstacles. This system provides the majority of the information input into the system which is then used to determine the various behaviours and actions to take. Localisation is responsible for determining whether the information is correct and consistent with the previous input data, filtering this information into what the robot perceives as the current world state. The last major system, locomotion, then allows the robot to move about the world to some desired location determined by the behaviour system. In order to perform this task, the robot needs some method of actuating joints in a controllable, fast and energy efficient way. Currently, actuators used by different humanoid league teams are limited to two main products, dynamixel servos \cite{robotis_mx106} or custom designed servo motors. These are both expensive and are limited in the speed and torque which can be output from the actuator. Both of these methods use electrical energy as the main energy system, storing this within Li-Po batteries and converting to a rotating shaft via a motor and gearbox. However, major leaders in the field of humanoid robotics and robotics in general outside of this competition use hydraulics \cite{atlas}. This allows them to carry larger payloads and run for longer periods of time. However, this also has it's trade offs increasing the weight of the platform and the speed in which it can move. \newline
 
 Thus the ultimate motivation for this project is to design and construct an alternate actuator capable of out performing the currently used dynamixel actuators in the performance of speed, energy efficiency and torque. \newline
 
@@ -147,6 +147,7 @@ An overview of the software architecture with a breakdown of the modularity of t
 This section covers the implementation of a simulated plant to access controller performance.
 
 \item \textbf{Conclusion} 
+Finally, the conclusion will summarise the findings of this work. It contains recommendations for future works.
 
 \end{enumerate}
 
@@ -337,7 +338,7 @@ If more torque was required for the joint, many parameters of the system could b
     \begin{subfigure}[t]{0.95 \textwidth}
         \centering
         \caption{Test Rig}
-        \includegraphics[scale=0.08]{MuscleRinging.png}
+        \includegraphics[scale=0.2]{Test_Rig_Photo.png}
         \label{fig:test_rig_photo}
     \end{subfigure}\\
     \begin{subfigure}[t]{0.45 \textwidth}
@@ -456,7 +457,7 @@ In order to control the flow of air into and out of the muscle bladder a 3 port 
             \draw[very thick] let \p1=($(P) - (0, 6.5)$), \p2=($(P) - (0, 10)$) in (\x1, \y1) -- (\x2, \y2) node[midway,label=right:{\LARGE{Regulated Air In}}]{};
         \end{tikzpicture}
     }
-        \caption{Single Muscle Actuator Assembly}
+    \caption{Single Muscle Actuator Assembly}
     \label{fig:pneumatic_valve}
 \end{figure}
 
@@ -601,7 +602,7 @@ However, this system only describes the dynamics of a single muscle arrangement,
 From these assumptions the model \Cref{math:dynamicforce2} above can be altered to the form the following \Cref{math:two_muscle_ode}. This is analogous to a double mass spring damper with two fixed ends, \Cref{fig:doublemassspringdamper}:
 
 \begin{equation}
-    \ddot{y} = \frac{1}{m}[F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})+F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]
+    \ddot{y} = \frac{1}{m}[F_E-F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})-F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]
     \label{math:two_muscle_ode}
 \end{equation}
 
@@ -669,13 +670,13 @@ where
         \boldsymbol{\chi} = 
     \begin{bmatrix}
         \dot{y}\\
-        \frac{1}{m}[F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})+F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]\\
+        \frac{1}{m}[-F_{S2}(k_2,P_{m2})-F_{S1}(k_1,P_{m1})-F_{D2}(\dot{k_2},P_{m2})-F_{D1}(\dot{k_1},P_{m1})]\\
         \frac{1}{V_{m1}}(P_a\dot{V_{a1}}-P_{m1}\dot{V_{m1}})\\
         \frac{1}{V_{m2}}(P_a\dot{V_{a2}}-P_{m2}\dot{V_{m2}})\\
     \end{bmatrix}
 \end{equation*}
 
-The partial differential of each state function with respect to each state then forms the final $\boldsymbol{A}$ matrix \Cref{math:A_matrix}. Converting this system into a discrete time representation can then be done using \Cref{math:discrete_formula}, resulting in the \Cref{math:discretistion_model} which is then used as the state update calculation. \newline
+The partial differential of each state function with respect to each state then forms the final $\boldsymbol{A}$ matrix \Cref{math:A_matrix}. Converting this system into a discrete time representation can then be done using Eulers Approximation \Cref{math:discrete_formula}, resulting in the \Cref{math:discretistion_model} which is then used as the state update calculation. \newline
 
 \begin{equation}
     \boldsymbol{A} =
@@ -816,7 +817,7 @@ The ideal model does not fit the experimental results closely. For the latex bla
 
 \subsection{Control System}
 \label{sub:control_system}
-In order to achieve robust control over the nonlinear actuators an implementation of model predictive control (MPC) was chosen to provide the control structure for the system, the outline of which can be seen in \Cref{fig:control_diagram_overview}. This control structure utilises a preview (prediction) horizon to estimate the future trajectory of the system based on the current state and a series of inputs to the system. This prediction horizon is calculated to 'p' time in the future, only requiring past knowledge of the system status. However, to achieve this an estimation of the system response to any arbituary system state and input is required to calculate the trajectory. Since the model of the pneumatic muscles is highly nonlinear, there are four main options for solving future estimations.
+In order to achieve robust control over the nonlinear actuators an implementation of model predictive control (MPC) was chosen to provide the control structure for the system, the outline of which can be seen in \Cref{fig:control_diagram_overview}. This controller will be compared in simulation to implementations of other available controllers, a PID and SMC.The MPC control structure utilises a preview (prediction) horizon to estimate the future trajectory of the system based on the current state and a series of inputs to the system. This prediction horizon is calculated to 'p' time in the future, only requiring past knowledge of the system status. However, to achieve this an estimation of the system response to any arbitrary system state and input is required to calculate the trajectory. Since the model of the pneumatic muscles is highly nonlinear, there are four main options for solving future estimations.
 \begin{itemize}
     \item Solve the nonlinear ODE using brute force or recursion
     \item Offline linearisation about a single operating point
@@ -877,8 +878,7 @@ module::HardwareIO::joint::OneAxis<module::MPC::AdaptiveMPC::AdaptiveMPC>
         muscles, 
         1, 
         0.47, 
-        module::MPC::AdaptiveMPC::mpc, 
-        module::MPC::AdaptiveMPC::optimizer1
+        module::MPC::AdaptiveMPC::optimizer
     );
 
 module::HardwareIO::joint::OneAxis<module::SMC::SMC> 
@@ -894,13 +894,12 @@ template <typename T>
 class OneAxis {
 public:
     OneAxis(std::vector<module::HardwareIO::muscle_t>& muscle,
-            float mass,
-            float radius,
-            T controller,
-            module::MPC::AdaptiveMPC::Optimizer optimizer)
-        : muscle1(muscle[0]), muscle2(muscle[1]), controller(optimizer) {
+        float mass,
+        float radius,
+        module::MPC::AdaptiveMPC::Optimizer optimizer)
+    : muscle1(muscle[0]), muscle2(muscle[1]), controller(optimizer) {
     }
-
+    
     OneAxis(std::vector<module::HardwareIO::muscle_t>& muscle, 
             float mass, 
             float radius, 
@@ -972,7 +971,7 @@ As a result of these performance tests, to achieve a process time approximately 
 \clearpage
 \section{Simulated System}
 \label{sub:simulated_system}
-To analyse the performance of the controllers, a simulated hardware module was created. This module is based on the \cite{hosovsky_2012} model used in the MPC controller. Simulated sensors have been implemented with some added Gaussian measurement noise. The simulated plant is used to test the controllers before experimental tests are performed.
+To analyse the performance of the controller, a simulated hardware module was created. This module is based on the \cite{hosovsky_2012} model used in the MPC controller. Simulated sensors have been implemented with some added Gaussian measurement noise. The simulated plant is used to test the controller before experimental tests are performed. The MPC controller is compared to two other control implementations, PID and SMC, to determine the relative effectiveness of the controller.
 
 \subsection{Simulation Results}
 \label{sub:simulation_results}
